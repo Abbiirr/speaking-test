@@ -1,0 +1,20 @@
+[project]
+name = "speaking-test"
+version = "0.1.0"
+description = "Local, offline IELTS speaking practice with Whisper-based feedback"
+requires-python = ">=3.11"
+dependencies = [
+    "streamlit>=1.42.0",
+    "faster-whisper>=1.1.0",
+    "jiwer>=3.1.0",
+    "librosa>=0.10.2",
+    "numpy>=1.26.0",
+    "soundfile>=0.12.1",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
