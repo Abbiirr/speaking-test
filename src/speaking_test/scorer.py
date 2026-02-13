@@ -31,11 +31,20 @@ def analyze_audio(audio_path: str, transcript: str, words: list) -> dict:
     else:
         pronunciation_confidence = 0.0
 
+    # Long pauses: count word gaps > 2 seconds using Whisper timestamps
+    long_pauses = 0
+    if len(words) >= 2:
+        for i in range(1, len(words)):
+            gap = words[i].start - words[i - 1].end
+            if gap > 2.0:
+                long_pauses += 1
+
     return {
         "duration": round(duration, 2),
         "speech_rate": round(speech_rate, 1),
         "pause_ratio": round(pause_ratio, 3),
         "pronunciation_confidence": round(pronunciation_confidence, 3),
+        "long_pauses": long_pauses,
     }
 
 

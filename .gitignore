@@ -12,5 +12,11 @@ wheels/
 # Environment
 .env
 
+# Data
+data/
+
+# Logs
+logs/
+
 # Claude
 .claude/
