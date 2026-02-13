@@ -62,6 +62,7 @@ Required keys:
 - "overall_feedback": string (2-3 sentence examiner summary of THIS specific answer)
 - "grammar_corrections": list of objects with keys "original", "corrected", "explanation" (find REAL errors from the transcript)
 - "vocabulary_upgrades": list of objects with keys "basic_word", "alternatives" (list of strings), "example" (find basic words the candidate ACTUALLY used)
+- "pronunciation_warnings": list of objects with keys "word", "phonetic", "tip" (words from the transcript commonly mispronounced by non-native speakers)
 - "strengths": list of strings (specific things done well in THIS answer)
 - "improvement_priorities": list of strings (specific actionable tips for THIS answer)"""
 

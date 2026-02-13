@@ -65,6 +65,12 @@ class VocabularyUpgrade(BaseModel):
     example: str = Field(description="Example sentence using one alternative")
 
 
+class PronunciationWarning(BaseModel):
+    word: str = Field(description="Word from transcript that may be mispronounced")
+    phonetic: str = Field(description="Correct pronunciation guide (simplified)")
+    tip: str = Field(description="Common mistake and how to fix it")
+
+
 class EnhancedReview(BaseModel):
     coherence: CriterionScore = Field(description="Coherence and cohesion")
     lexical_resource: CriterionScore = Field(description="Lexical resource / vocabulary")
@@ -90,6 +96,10 @@ class EnhancedReview(BaseModel):
     improvement_priorities: list[str] = Field(
         default_factory=list,
         description="2-3 specific, actionable improvement tips",
+    )
+    pronunciation_warnings: list[PronunciationWarning] = Field(
+        default_factory=list,
+        description="Words the candidate used that are commonly mispronounced",
     )
 
 
@@ -158,3 +168,7 @@ class AttemptRecord:
     grammar_corrections: str = ""  # JSON string
     vocabulary_upgrades: str = ""  # JSON string
     improvement_tips: str = ""  # JSON string
+    band9_answer: str = ""
+    strengths: str = ""  # JSON string
+    pronunciation_warnings: str = ""  # JSON string
+    source: str = ""

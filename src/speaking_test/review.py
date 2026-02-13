@@ -80,6 +80,16 @@ def render_review(
                 )
                 st.divider()
 
+    # 6b. Pronunciation Warnings (expandable)
+    if is_enhanced and evaluation.pronunciation_warnings:
+        with st.expander(f"Pronunciation Warnings ({len(evaluation.pronunciation_warnings)})"):
+            for pw in evaluation.pronunciation_warnings:
+                st.markdown(
+                    f"**{pw.word}** — /{pw.phonetic}/\n\n"
+                    f"*{pw.tip}*"
+                )
+                st.divider()
+
     # 7. Detailed Criterion Breakdown
     with st.expander("Detailed Criterion Breakdown"):
         st.markdown(
@@ -163,6 +173,13 @@ def render_review_from_dict(attempt: dict) -> None:
                     )
                     st.divider()
 
+    # Strengths from JSON
+    strengths = attempt.get("strengths")
+    if isinstance(strengths, list) and strengths:
+        st.markdown("**Strengths**")
+        for s in strengths:
+            st.markdown(f"- {s}")
+
     # Improvement tips from JSON
     tips = attempt.get("improvement_tips")
     if isinstance(tips, list) and tips:
@@ -170,6 +187,22 @@ def render_review_from_dict(attempt: dict) -> None:
         for tip in tips:
             st.markdown(f"- {tip}")
 
+    # Pronunciation warnings from JSON
+    pw = attempt.get("pronunciation_warnings")
+    if isinstance(pw, list) and pw:
+        with st.expander(f"Pronunciation Warnings ({len(pw)})"):
+            for item in pw:
+                if isinstance(item, dict):
+                    st.markdown(
+                        f"**{item.get('word', '')}** — /{item.get('phonetic', '')}/\n\n"
+                        f"*{item.get('tip', '')}*"
+                    )
+                    st.divider()
+
     if attempt.get("transcript"):
         with st.expander("Transcript"):
             st.write(attempt["transcript"])
+
+    if attempt.get("band9_answer"):
+        with st.expander("Reference Answer"):
+            st.markdown(attempt["band9_answer"])

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import json
 import sqlite3
 from datetime import datetime, timezone
@@ -11,6 +12,7 @@ from speaking_test.models import AttemptRecord, SessionRecord
 
 DB_DIR = Path(__file__).resolve().parent.parent.parent / "data"
 DB_PATH = DB_DIR / "history.db"
+CSV_PATH = Path(__file__).resolve().parent.parent.parent / "questions_answers_updated.csv"
 
 
 def _get_connection() -> sqlite3.Connection:
@@ -52,9 +54,71 @@ def _init_db(conn: sqlite3.Connection) -> None:
             grammar_corrections TEXT DEFAULT '',
             vocabulary_upgrades TEXT DEFAULT '',
             improvement_tips TEXT DEFAULT '',
+            band9_answer TEXT DEFAULT '',
+            strengths TEXT DEFAULT '',
+            pronunciation_warnings TEXT DEFAULT '',
+            source TEXT DEFAULT '',
             FOREIGN KEY (session_id) REFERENCES sessions(id)
         );
     """)
+
+    # Questions table — seeded from CSV once
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS questions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            part INTEGER NOT NULL,
+            topic TEXT DEFAULT '',
+            question_text TEXT NOT NULL,
+            cue_card TEXT DEFAULT '',
+            source TEXT DEFAULT '',
+            band9_answer TEXT DEFAULT '',
+            answer_variant TEXT DEFAULT ''
+        )
+    """)
+
+    # Migrate existing databases: add new columns if missing
+    _new_columns = [
+        ("band9_answer", "TEXT DEFAULT ''"),
+        ("strengths", "TEXT DEFAULT ''"),
+        ("pronunciation_warnings", "TEXT DEFAULT ''"),
+        ("source", "TEXT DEFAULT ''"),
+    ]
+    for col_name, col_type in _new_columns:
+        try:
+            conn.execute(f"ALTER TABLE attempts ADD COLUMN {col_name} {col_type}")
+        except sqlite3.OperationalError:
+            pass  # Column already exists
+
+
+def _seed_questions(conn: sqlite3.Connection) -> None:
+    """Import CSV questions into the questions table (once, if empty)."""
+    row = conn.execute("SELECT COUNT(*) as cnt FROM questions").fetchone()
+    if row["cnt"] > 0:
+        return  # Already seeded
+
+    if not CSV_PATH.exists():
+        return
+
+    with open(CSV_PATH, encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        rows = []
+        for r in reader:
+            rows.append((
+                int(r["part"]),
+                r.get("topic", "").strip(),
+                r["question"].strip(),
+                r.get("cue_card", "").strip(),
+                r.get("source", "").strip(),
+                r.get("band9_answer", "").strip(),
+                r.get("answer_variant", "").strip(),
+            ))
+
+    conn.executemany(
+        "INSERT INTO questions (part, topic, question_text, cue_card, source, "
+        "band9_answer, answer_variant) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        rows,
+    )
+    conn.commit()
 
 
 _conn: sqlite3.Connection | None = None
@@ -65,7 +129,48 @@ def get_db() -> sqlite3.Connection:
     if _conn is None:
         _conn = _get_connection()
         _init_db(_conn)
+        _seed_questions(_conn)
     return _conn
+
+
+# ---------------------------------------------------------------------------
+# Question loading from DB
+# ---------------------------------------------------------------------------
+
+def get_all_questions_from_db() -> list[dict]:
+    """Load all unique questions from the DB, one random answer variant per question.
+
+    Returns list of dicts with keys: part, topic, question_text, cue_card, source,
+    band9_answer.
+    """
+    conn = get_db()
+    # Get all distinct (part, question_text) groups with their answers
+    rows = conn.execute(
+        "SELECT part, topic, question_text, cue_card, source, band9_answer, answer_variant "
+        "FROM questions ORDER BY part, question_text, answer_variant"
+    ).fetchall()
+
+    # Group by (part, question_text), pick one random variant per question
+    import random
+    groups: dict[tuple[int, str], list[dict]] = {}
+    for r in rows:
+        key = (r["part"], r["question_text"])
+        if key not in groups:
+            groups[key] = []
+        groups[key].append(dict(r))
+
+    result = []
+    for (_part, _text), variants in groups.items():
+        chosen = random.choice(variants)
+        result.append({
+            "part": chosen["part"],
+            "topic": chosen["topic"],
+            "question_text": chosen["question_text"],
+            "cue_card": chosen["cue_card"],
+            "source": chosen["source"],
+            "band9_answer": chosen["band9_answer"],
+        })
+    return result
 
 
 def create_session(mode: str) -> int:
@@ -89,8 +194,9 @@ def save_attempt(record: AttemptRecord) -> int:
             duration, overall_band, fluency_coherence, lexical_resource,
             grammatical_range, pronunciation, speech_rate, pause_ratio,
             pronunciation_confidence, examiner_feedback,
-            grammar_corrections, vocabulary_upgrades, improvement_tips
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            grammar_corrections, vocabulary_upgrades, improvement_tips,
+            band9_answer, strengths, pronunciation_warnings, source
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (
             record.session_id,
             record.timestamp,
@@ -111,6 +217,10 @@ def save_attempt(record: AttemptRecord) -> int:
             record.grammar_corrections,
             record.vocabulary_upgrades,
             record.improvement_tips,
+            record.band9_answer,
+            record.strengths,
+            record.pronunciation_warnings,
+            record.source,
         ),
     )
     conn.commit()
@@ -195,7 +305,10 @@ def get_attempts_for_session(session_id: int) -> list[dict]:
     for r in rows:
         d = dict(r)
         # Parse JSON fields
-        for field in ("grammar_corrections", "vocabulary_upgrades", "improvement_tips"):
+        for field in (
+            "grammar_corrections", "vocabulary_upgrades", "improvement_tips",
+            "strengths", "pronunciation_warnings",
+        ):
             val = d.get(field, "")
             if val:
                 try:
@@ -204,3 +317,122 @@ def get_attempts_for_session(session_id: int) -> list[dict]:
                     pass
         result.append(d)
     return result
+
+
+def get_detailed_weaknesses(limit: int = 50) -> dict:
+    """Aggregate weakness data from recent attempts (no LLM calls).
+
+    Returns a dict with:
+    - grammar_errors: list of (original, corrected, count) tuples — most frequent
+    - basic_words: list of (word, count) tuples — most common words to upgrade
+    - criterion_trends: dict of criterion -> {"avg": float, "direction": str}
+    - recurring_tips: list of (tip, count) tuples — most repeated tips
+    """
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT grammar_corrections, vocabulary_upgrades, improvement_tips, "
+        "fluency_coherence, lexical_resource, grammatical_range, pronunciation, "
+        "id FROM attempts ORDER BY id DESC LIMIT ?",
+        (limit,),
+    ).fetchall()
+
+    if not rows:
+        return {}
+
+    # Parse grammar errors
+    from collections import Counter
+    grammar_counter: Counter = Counter()
+    for r in rows:
+        gc_raw = r["grammar_corrections"] or ""
+        if gc_raw:
+            try:
+                corrections = json.loads(gc_raw) if isinstance(gc_raw, str) else gc_raw
+                if isinstance(corrections, list):
+                    for item in corrections:
+                        if isinstance(item, dict):
+                            orig = item.get("original", "").strip()
+                            corr = item.get("corrected", "").strip()
+                            if orig and corr:
+                                grammar_counter[(orig, corr)] += 1
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+    # Parse basic words to upgrade
+    word_counter: Counter = Counter()
+    for r in rows:
+        vu_raw = r["vocabulary_upgrades"] or ""
+        if vu_raw:
+            try:
+                upgrades = json.loads(vu_raw) if isinstance(vu_raw, str) else vu_raw
+                if isinstance(upgrades, list):
+                    for item in upgrades:
+                        if isinstance(item, dict):
+                            word = item.get("basic_word", "").strip().lower()
+                            if word:
+                                word_counter[word] += 1
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+    # Parse recurring tips
+    tip_counter: Counter = Counter()
+    for r in rows:
+        tips_raw = r["improvement_tips"] or ""
+        if tips_raw:
+            try:
+                tips = json.loads(tips_raw) if isinstance(tips_raw, str) else tips_raw
+                if isinstance(tips, list):
+                    for tip in tips:
+                        if isinstance(tip, str) and tip.strip():
+                            tip_counter[tip.strip()] += 1
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+    # Criterion trends — compare first half vs second half of attempts
+    criteria = {
+        "Fluency & Coherence": "fluency_coherence",
+        "Lexical Resource": "lexical_resource",
+        "Grammar": "grammatical_range",
+        "Pronunciation": "pronunciation",
+    }
+    criterion_trends = {}
+    rows_list = list(reversed(rows))  # oldest first
+    mid = len(rows_list) // 2
+    for label, col in criteria.items():
+        all_vals = [r[col] for r in rows_list if r[col] is not None and r[col] > 0]
+        if not all_vals:
+            continue
+        avg = round(sum(all_vals) / len(all_vals), 1)
+        if mid > 0 and len(rows_list) >= 4:
+            first_half = [r[col] for r in rows_list[:mid] if r[col] and r[col] > 0]
+            second_half = [r[col] for r in rows_list[mid:] if r[col] and r[col] > 0]
+            if first_half and second_half:
+                avg1 = sum(first_half) / len(first_half)
+                avg2 = sum(second_half) / len(second_half)
+                diff = avg2 - avg1
+                if diff > 0.3:
+                    direction = "improving"
+                elif diff < -0.3:
+                    direction = "declining"
+                else:
+                    direction = "stable"
+            else:
+                direction = "insufficient data"
+        else:
+            direction = "insufficient data"
+        criterion_trends[label] = {"avg": avg, "direction": direction}
+
+    return {
+        "grammar_errors": [
+            {"original": k[0], "corrected": k[1], "count": v}
+            for k, v in grammar_counter.most_common(5)
+        ],
+        "basic_words": [
+            {"word": k, "count": v}
+            for k, v in word_counter.most_common(5)
+        ],
+        "criterion_trends": criterion_trends,
+        "recurring_tips": [
+            {"tip": k, "count": v}
+            for k, v in tip_counter.most_common(5)
+        ],
+    }

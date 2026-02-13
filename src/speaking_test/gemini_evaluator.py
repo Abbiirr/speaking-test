@@ -24,7 +24,30 @@ answer on its OWN merits — judge the ideas, vocabulary, grammar, and coherence
 that the candidate actually produced. Do NOT assess pronunciation or fluency — \
 those are measured separately by audio analysis.
 
-Score each criterion on the IELTS 0–9 band scale (use 0.5 increments). Be fair but \
+The candidate's transcript is your PRIMARY input. Quote the candidate's actual words \
+when giving feedback. Never invent errors — only cite what the candidate actually said.
+
+Score against official IELTS Band 9 descriptors:
+
+Coherence (Band 9): Speaks fluently with only rare repetition or self-correction. \
+Hesitations are content-related, not language-searching. Topics are fully developed. \
+Look for: signposting ("There are two reasons…", "On the other hand…"), logical flow.
+
+Lexical Resource (Band 9): Flexible and precise vocabulary across topics. \
+Idiomatic language is natural and accurate, not forced. \
+Look for: collocations ("heavy traffic" not "big traffic"), precise word choice, \
+topic-specific vocabulary. Flag basic/vague words the candidate should upgrade.
+
+Grammatical Range (Band 9): Full range of structures used naturally. \
+Consistent accuracy with only occasional slips. \
+Look for: relative clauses, contrast (although/whereas), conditionals. \
+Quote each grammar error from the transcript with the corrected version.
+
+Task Response: Directly addresses the question with developed ideas and examples. \
+Part 1: Should be 15-25s — direct answer + reason + micro-example. \
+Part 3: Should be 35-60s — opinion → reasons → example → counterpoint → summary.
+
+Score each criterion on the IELTS 0-9 band scale (use 0.5 increments). Be fair but \
 rigorous. Base your scores entirely on what the candidate said, not on how closely \
 it matches any reference answer. Any reference answer provided is ONLY for understanding \
 the question's expected scope — ignore its wording, structure, and vocabulary when scoring.
@@ -45,21 +68,53 @@ the candidate's spoken answer on its OWN merits — judge the ideas, vocabulary,
 grammar, and coherence that the candidate actually produced. Do NOT assess \
 pronunciation or fluency — those are measured separately.
 
-Score each criterion on the IELTS 0–9 band scale (use 0.5 increments). Be fair but \
+The candidate's transcript is your PRIMARY input. Quote the candidate's actual words \
+when giving feedback. Highlight specific errors with the exact phrase from the transcript. \
+Never invent errors — only cite what the candidate actually said.
+
+Score against official IELTS Band 9 descriptors:
+
+Coherence (Band 9): Speaks fluently with only rare repetition or self-correction. \
+Hesitations are content-related, not language-searching. Topics are fully developed. \
+Look for: signposting ("There are two reasons…", "On the other hand…"), logical flow.
+
+Lexical Resource (Band 9): Flexible and precise vocabulary across topics. \
+Idiomatic language is natural and accurate, not forced. \
+Look for: collocations ("heavy traffic" not "big traffic"), precise word choice, \
+topic-specific vocabulary. Flag basic/vague words the candidate should upgrade.
+
+Grammatical Range (Band 9): Full range of structures used naturally. \
+Consistent accuracy with only occasional slips. \
+Look for: relative clauses, contrast (although/whereas), conditionals. \
+Quote each grammar error from the transcript with the corrected version.
+
+Task Response: Directly addresses the question with developed ideas and examples. \
+Part 1: Should be 15-25s — direct answer + reason + micro-example. \
+Part 3: Should be 35-60s — opinion → reasons → example → counterpoint → summary.
+
+Score each criterion on the IELTS 0-9 band scale (use 0.5 increments). Be fair but \
 rigorous. Base your scores entirely on what the candidate said. Any reference answer \
 provided is ONLY for understanding the question's expected scope — ignore its wording, \
 structure, and vocabulary when scoring.
 
 In addition to scores, provide:
-1. **Grammar corrections**: Find specific grammar errors in the candidate's transcript. \
-For each, give the original phrase, the corrected version, and a brief rule explanation. \
+
+1. **Grammar corrections**: Quote the EXACT phrase from the transcript that contains \
+the error. Show the corrected version. Explain the rule briefly. \
 Only cite errors the candidate actually made.
-2. **Vocabulary upgrades**: Identify 2-4 basic/common words the candidate actually used \
-and suggest advanced alternatives with an example sentence.
-3. **Strengths**: List 2-3 specific things the candidate did well (not generic praise). \
-Quote or reference specific parts of their answer.
-4. **Improvement priorities**: List 2-3 specific, actionable tips based on weaknesses \
-you observed in this answer (not generic advice like "practice more").
+
+2. **Vocabulary upgrades**: Find basic/common words the candidate ACTUALLY USED in \
+their transcript. Suggest 2-3 advanced alternatives with an example sentence.
+
+3. **Pronunciation warnings**: List words from the transcript that are commonly \
+mispronounced by non-native speakers, with phonetic guidance (simplified IPA or \
+syllable stress). Include a tip on the common mistake.
+
+4. **Strengths**: Quote specific phrases from the transcript that demonstrate \
+good language use. Be specific, not generic.
+
+5. **Improvement priorities**: Reference specific moments in the transcript where \
+the candidate could improve. Give actionable rewrites.
 
 Return a JSON object matching the schema provided.
 """

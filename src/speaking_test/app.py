@@ -17,6 +17,7 @@ from speaking_test.database import (
     get_attempts_for_session,
     get_band_trend,
     get_criterion_trends,
+    get_detailed_weaknesses,
     get_recent_sessions,
     get_weak_areas,
     save_attempt,
@@ -39,7 +40,6 @@ from speaking_test.questions import (
     assemble_mock_test,
     get_random_question,
     load_all_questions,
-    load_questions,
 )
 from speaking_test.review import render_review, render_review_from_dict
 from speaking_test.scorer import analyze_audio, estimate_band, generate_feedback
@@ -120,6 +120,8 @@ def save_attempt_from_eval(
     metrics: dict,
     combined: dict | None,
     evaluation=None,
+    band9_answer: str = "",
+    source: str = "",
 ):
     """Save an attempt record to the database."""
     record = AttemptRecord(
@@ -138,6 +140,8 @@ def save_attempt_from_eval(
         pause_ratio=metrics.get("pause_ratio", 0),
         pronunciation_confidence=metrics.get("pronunciation_confidence", 0),
         examiner_feedback=evaluation.overall_feedback if evaluation else "",
+        band9_answer=band9_answer,
+        source=source,
     )
 
     if isinstance(evaluation, EnhancedReview):
@@ -148,6 +152,10 @@ def save_attempt_from_eval(
             [vu.model_dump() for vu in evaluation.vocabulary_upgrades]
         )
         record.improvement_tips = json.dumps(evaluation.improvement_priorities)
+        record.strengths = json.dumps(evaluation.strengths)
+        record.pronunciation_warnings = json.dumps(
+            [pw.model_dump() for pw in evaluation.pronunciation_warnings]
+        )
 
     return save_attempt(record)
 
@@ -398,6 +406,8 @@ def render_interview_mode():
                             metrics=metrics,
                             combined=combined,
                             evaluation=content_eval,
+                            band9_answer=qwa.band9_answer,
+                            source=q.source,
                         )
                     else:
                         # Fallback: show basic metrics
@@ -569,6 +579,8 @@ def render_mock_test_mode():
                         metrics=metrics,
                         combined=combined,
                         evaluation=content_eval,
+                        band9_answer=current_qwa.band9_answer,
+                        source=current_qwa.question.source,
                     )
 
                 # Record response in state
@@ -657,7 +669,7 @@ def _render_mock_test_results(state: MockTestState):
 def render_history_mode():
     st.header("History")
 
-    tab1, tab2, tab3 = st.tabs(["Band Trend", "Criterion Breakdown", "Sessions"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Band Trend", "Criterion Breakdown", "Sessions", "Weaknesses"])
 
     with tab1:
         data = get_band_trend(limit=50)
@@ -716,6 +728,48 @@ def render_history_mode():
                     )
                     render_review_from_dict(att)
                     st.divider()
+
+    with tab4:
+        weaknesses = get_detailed_weaknesses(limit=50)
+        if not weaknesses:
+            st.info("No data yet. Complete some practice sessions to see weakness analysis.")
+        else:
+            # Criterion trends
+            trends = weaknesses.get("criterion_trends", {})
+            if trends:
+                st.subheader("Criterion Trends")
+                for label, data in trends.items():
+                    direction = data["direction"]
+                    icon = {"improving": "+", "declining": "-", "stable": "="}.get(
+                        direction, ""
+                    )
+                    st.markdown(
+                        f"- **{label}**: avg {data['avg']} ({direction} {icon})"
+                    )
+
+            # Grammar errors
+            grammar = weaknesses.get("grammar_errors", [])
+            if grammar:
+                st.subheader("Top Recurring Grammar Mistakes")
+                for item in grammar:
+                    st.markdown(
+                        f"- ~~{item['original']}~~ &rarr; **{item['corrected']}** "
+                        f"({item['count']}x)"
+                    )
+
+            # Basic words to upgrade
+            words = weaknesses.get("basic_words", [])
+            if words:
+                st.subheader("Top Basic Words to Upgrade")
+                for item in words:
+                    st.markdown(f"- **{item['word']}** ({item['count']}x)")
+
+            # Recurring tips
+            tips = weaknesses.get("recurring_tips", [])
+            if tips:
+                st.subheader("Recurring Examiner Tips")
+                for item in tips:
+                    st.markdown(f"- {item['tip']} ({item['count']}x)")
 
 
 # ---------------------------------------------------------------------------
