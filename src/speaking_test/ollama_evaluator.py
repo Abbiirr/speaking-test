@@ -11,15 +11,6 @@ import httpx
 
 logger = logging.getLogger(__name__)
 
-# Set up file logging for Ollama debugging
-_LOG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "logs")
-os.makedirs(_LOG_DIR, exist_ok=True)
-_file_handler = logging.FileHandler(os.path.join(_LOG_DIR, "ollama.log"))
-_file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
-_file_handler.setLevel(logging.DEBUG)
-logger.addHandler(_file_handler)
-logger.setLevel(logging.DEBUG)
-
 from speaking_test.gemini_evaluator import ENHANCED_SYSTEM_PROMPT, SYSTEM_PROMPT
 from speaking_test.models import EnhancedReview, ContentEvaluation
 
