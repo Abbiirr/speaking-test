@@ -2,15 +2,20 @@
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 
 from google import genai
 
+logger = logging.getLogger(__name__)
+
 from speaking_test.models import (
     CriterionScore,
     EnhancedReview,
     ContentEvaluation,
+    WritingEvaluation,
+    WritingEnhancedReview,
 )
 
 
@@ -162,6 +167,7 @@ def evaluate_answer(
 {band9_answer}
 """
 
+    logger.info("Gemini evaluate_answer: part=%d, transcript_len=%d", part, len(transcript))
     response = client.models.generate_content(
         model=model,
         contents=user_prompt,
@@ -173,6 +179,7 @@ def evaluate_answer(
         ),
     )
 
+    logger.debug("Gemini raw response: %s", response.text[:500])
     return ContentEvaluation.model_validate_json(response.text)
 
 
@@ -202,6 +209,7 @@ def evaluate_answer_enhanced(
 {band9_answer}
 """
 
+    logger.info("Gemini evaluate_answer_enhanced: part=%d, transcript_len=%d", part, len(transcript))
     response = client.models.generate_content(
         model=model,
         contents=user_prompt,
@@ -213,6 +221,7 @@ def evaluate_answer_enhanced(
         ),
     )
 
+    logger.debug("Gemini enhanced raw response: %s", response.text[:500])
     return EnhancedReview.model_validate_json(response.text)
 
 
@@ -310,3 +319,182 @@ def detect_fillers(transcript: str) -> dict[str, int]:
         if matches:
             counts[label] = len(matches)
     return counts
+
+
+# ---------------------------------------------------------------------------
+# Writing evaluation
+# ---------------------------------------------------------------------------
+
+WRITING_SYSTEM_PROMPT = """\
+You are an experienced IELTS Writing examiner. Evaluate the candidate's essay \
+against the official IELTS Writing band descriptors for the 4 criteria.
+
+Score each criterion on the IELTS 0-9 band scale (use 0.5 increments). Be fair \
+but rigorous. Quote specific phrases from the essay when giving feedback.
+
+**Task Achievement / Task Response:**
+- Task 1: Does the response describe the key features accurately? Is there an \
+overview? Is data selected appropriately? Minimum 150 words.
+- Task 2: Does the response address all parts of the task? Is the position clear \
+throughout? Are ideas developed and supported with examples? Minimum 250 words.
+
+**Coherence & Cohesion (Band 9):** Skilful paragraphing. A wide range of cohesive \
+devices used with full flexibility. Information and ideas presented logically with \
+clear progression throughout. Look for: topic sentences, linking words, reference \
+chains, paragraph organisation.
+
+**Lexical Resource (Band 9):** Full flexibility and precise use of vocabulary. \
+Rare minor errors only as slips. Look for: collocations, academic vocabulary, \
+precision, avoidance of repetition. Flag basic/overused words.
+
+**Grammatical Range & Accuracy (Band 9):** Full range of structures used \
+accurately and appropriately. Rare minor errors only as slips. Look for: \
+complex sentences, passive voice, relative clauses, conditionals, articles, \
+prepositions.
+
+Word count penalties: Under minimum = max Band 5 for Task Achievement.
+"""
+
+WRITING_ENHANCED_SYSTEM_PROMPT = """\
+You are an experienced IELTS Writing examiner giving a detailed review. Evaluate \
+the candidate's essay against the official IELTS Writing band descriptors.
+
+Score each criterion on the IELTS 0-9 band scale (use 0.5 increments). Quote \
+specific phrases from the essay when giving feedback.
+
+**Task Achievement / Task Response:**
+- Task 1: Does the response describe key features? Is there an overview? \
+Is data selected appropriately? Minimum 150 words.
+- Task 2: Does the response address all parts of the task? Is the position \
+clear? Are ideas developed with examples? Minimum 250 words.
+
+**Coherence & Cohesion (Band 9):** Skilful paragraphing. Wide range of cohesive \
+devices. Logical progression throughout.
+
+**Lexical Resource (Band 9):** Full flexibility and precise vocabulary. Rare \
+minor errors only as slips.
+
+**Grammatical Range & Accuracy (Band 9):** Full range of structures used \
+accurately. Rare minor errors only as slips.
+
+In addition to scores, provide:
+
+1. **Grammar corrections**: Quote the EXACT phrase from the essay that contains \
+the error. Show the corrected version. Explain the rule briefly.
+
+2. **Vocabulary upgrades**: Find basic/overused words the candidate ACTUALLY USED. \
+Suggest 2-3 advanced alternatives with an example sentence.
+
+3. **Paragraph feedback**: For each paragraph, give a 1-2 sentence analysis of \
+its effectiveness: topic sentence, development, cohesion.
+
+4. **Strengths**: Quote specific phrases that demonstrate good writing. Be specific.
+
+5. **Improvement priorities**: Reference specific parts of the essay where the \
+candidate could improve. Give actionable rewrites.
+
+Word count penalties: Under minimum = max Band 5 for Task Achievement.
+"""
+
+
+def evaluate_writing(
+    client: genai.Client,
+    model: str,
+    prompt_text: str,
+    essay_text: str,
+    task_type: int,
+    task1_data_json: str | None = None,
+) -> WritingEvaluation:
+    """Evaluate a writing essay via Gemini."""
+    task_label = "Task 1" if task_type == 1 else "Task 2"
+    min_words = 150 if task_type == 1 else 250
+    word_count = len(essay_text.split())
+
+    user_prompt = f"""## IELTS Writing {task_label}
+
+**Question/Prompt:**
+{prompt_text}
+
+**Candidate's Essay ({word_count} words, minimum {min_words}):**
+{essay_text}
+"""
+    if task1_data_json:
+        user_prompt += f"\n**Chart Data (JSON):**\n{task1_data_json}\n"
+
+    logger.info("Gemini evaluate_writing: task=%d, word_count=%d", task_type, word_count)
+    response = client.models.generate_content(
+        model=model,
+        contents=user_prompt,
+        config=genai.types.GenerateContentConfig(
+            system_instruction=WRITING_SYSTEM_PROMPT,
+            temperature=0.3,
+            response_mime_type="application/json",
+            response_schema=WritingEvaluation,
+        ),
+    )
+    logger.debug("Gemini writing raw response: %s", response.text[:500])
+    return WritingEvaluation.model_validate_json(response.text)
+
+
+def evaluate_writing_enhanced(
+    client: genai.Client,
+    model: str,
+    prompt_text: str,
+    essay_text: str,
+    task_type: int,
+    task1_data_json: str | None = None,
+) -> WritingEnhancedReview:
+    """Evaluate writing with richer feedback: corrections, upgrades, paragraph analysis."""
+    task_label = "Task 1" if task_type == 1 else "Task 2"
+    min_words = 150 if task_type == 1 else 250
+    word_count = len(essay_text.split())
+
+    user_prompt = f"""## IELTS Writing {task_label}
+
+**Question/Prompt:**
+{prompt_text}
+
+**Candidate's Essay ({word_count} words, minimum {min_words}):**
+{essay_text}
+"""
+    if task1_data_json:
+        user_prompt += f"\n**Chart Data (JSON):**\n{task1_data_json}\n"
+
+    logger.info("Gemini evaluate_writing_enhanced: task=%d, word_count=%d", task_type, word_count)
+    response = client.models.generate_content(
+        model=model,
+        contents=user_prompt,
+        config=genai.types.GenerateContentConfig(
+            system_instruction=WRITING_ENHANCED_SYSTEM_PROMPT,
+            temperature=0.3,
+            response_mime_type="application/json",
+            response_schema=WritingEnhancedReview,
+        ),
+    )
+    logger.debug("Gemini writing enhanced raw response: %s", response.text[:500])
+    return WritingEnhancedReview.model_validate_json(response.text)
+
+
+def compute_writing_band(
+    eval_result: WritingEvaluation | WritingEnhancedReview,
+) -> float:
+    """Average of 4 writing criteria, rounded to nearest 0.5."""
+    raw = (
+        eval_result.task_achievement.score
+        + eval_result.coherence.score
+        + eval_result.lexical_resource.score
+        + eval_result.grammatical_range.score
+    ) / 4
+    return round(raw * 2) / 2
+
+
+def writing_quality_checks(essay_text: str, task_type: int) -> dict:
+    """Pre-LLM validation: word count, empty check."""
+    word_count = len(essay_text.split())
+    min_words = 150 if task_type == 1 else 250
+    return {
+        "word_count": word_count,
+        "min_words": min_words,
+        "meets_minimum": word_count >= min_words,
+        "is_empty": word_count == 0,
+    }

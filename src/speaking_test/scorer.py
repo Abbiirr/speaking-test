@@ -1,10 +1,47 @@
-import librosa
 import numpy as np
+import subprocess
+import tempfile
+import os
+
+
+def _load_audio(audio_path: str) -> tuple[np.ndarray, int]:
+    """Load audio as float32 mono, converting via ffmpeg if needed."""
+    # Try soundfile first (handles WAV, FLAC, OGG natively)
+    try:
+        import soundfile as sf
+        y, sr = sf.read(audio_path, dtype="float32")
+        if y.ndim > 1:
+            y = y.mean(axis=1)
+        return y, sr
+    except Exception:
+        pass
+
+    # Fallback: convert to WAV via ffmpeg (handles webm, ogg, mp3, etc.)
+    tmp_wav = tempfile.mktemp(suffix=".wav")
+    try:
+        subprocess.run(
+            ["ffmpeg", "-y", "-i", audio_path, "-ar", "16000", "-ac", "1", "-f", "wav", tmp_wav],
+            capture_output=True,
+            check=True,
+        )
+        import soundfile as sf
+        y, sr = sf.read(tmp_wav, dtype="float32")
+        return y, sr
+    except Exception:
+        pass
+    finally:
+        if os.path.exists(tmp_wav):
+            os.unlink(tmp_wav)
+
+    # Last resort: librosa (may trigger audioread)
+    import librosa
+    y, sr = librosa.load(audio_path, sr=None)
+    return y, sr
 
 
 def analyze_audio(audio_path: str, transcript: str, words: list) -> dict:
     """Compute speech metrics from audio and Whisper output."""
-    y, sr = librosa.load(audio_path, sr=None)
+    y, sr = _load_audio(audio_path)
     duration = len(y) / sr if sr > 0 else 0.0
 
     if duration == 0:
@@ -20,6 +57,7 @@ def analyze_audio(audio_path: str, transcript: str, words: list) -> dict:
     speech_rate = word_count / (duration / 60) if duration > 0 else 0.0
 
     # Pause ratio via voice activity detection
+    import librosa
     intervals = librosa.effects.split(y, top_db=30)
     speech_time = sum((end - start) for start, end in intervals) / sr
     pause_ratio = 1.0 - (speech_time / duration) if duration > 0 else 1.0

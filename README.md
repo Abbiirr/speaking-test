@@ -1,6 +1,6 @@
-# IELTS Speaking Practice
+# IELTS Practice
 
-A local IELTS speaking preparation assistant with full mock tests, AI-powered deep reviews, 550+ questions, and progress tracking.
+A local IELTS speaking and writing preparation assistant with full mock tests, AI-powered deep reviews, 550+ questions, PDF ingestion, and progress tracking.
 
 Built with Streamlit, Whisper (faster-whisper), and Google Gemini or Ollama. Runs on GPU (NVIDIA CUDA).
 
@@ -12,7 +12,9 @@ Built with Streamlit, Whisper (faster-whisper), and Google Gemini or Ollama. Run
 | **Mock Test** | Full Part 1 → 2 → 3 simulation with realistic timing (1-min prep for Part 2). Per-question enhanced reviews and overall results. |
 | **Practice** | Paste a reference script, read it aloud, get WER + fluency + pronunciation feedback. |
 | **Transcribe** | Record speech and get a transcript with pitch visualization. |
-| **History** | Band score trends, per-criterion breakdown charts, weak area detection, and session history. |
+| **Writing** | IELTS Writing Task 1 & 2 practice with AI evaluation on all 4 official criteria. Supports prompts from Cambridge IELTS PDFs or custom prompts. |
+| **PDF Library** | Full-text search over ingested IELTS PDFs with page image preview. |
+| **History** | Band score trends, per-criterion breakdown charts, weak area detection, session history, and writing analytics. |
 
 ## Requirements
 
@@ -27,6 +29,12 @@ Install [uv](https://docs.astral.sh/uv/getting-started/installation/) if you hav
 
 ```bash
 uv sync
+```
+
+To also install PDF ingestion support (optional — only needed if you want to extract prompts from Cambridge IELTS PDFs):
+
+```bash
+uv sync --extra pdf
 ```
 
 Create a `.env` file. Choose one AI provider:
@@ -91,6 +99,33 @@ On first run, the Whisper `base.en` model (~150 MB) is downloaded automatically.
 1. Record your speech.
 2. Get a text transcript and pitch contour chart.
 
+### Writing mode
+
+1. Select **Writing** in the sidebar.
+2. Choose test type (Academic / General Training) and task (Task 1 / Task 2).
+3. Click **Get Prompt** for a question from the database, or paste a custom prompt.
+4. Write your essay in the text area (live word count shown).
+5. Click **Submit Essay** for AI evaluation on all 4 IELTS Writing criteria.
+
+### PDF Library mode
+
+1. Search ingested documents with full-text search.
+2. Browse results with page text snippets and full-page image previews.
+
+### PDF Ingestion (one-time setup)
+
+To populate the writing question bank from Cambridge IELTS PDFs:
+
+```bash
+# Step 1: Ingest PDFs (extracts text + page images)
+uv run --extra pdf python scripts/ingest_pdf.py pdf/
+
+# Step 2: Extract writing prompts from ingested pages
+uv run python scripts/extract_writing_prompts.py
+```
+
+Extracted content is saved to `pdf_extracted/` as markdown, JSON, and PNG images.
+
 ## How Scoring Works
 
 Interview and Mock Test modes blend Gemini content evaluation with audio analysis:
@@ -102,13 +137,24 @@ Interview and Mock Test modes blend Gemini content evaluation with audio analysi
 
 Overall band is the average, rounded to nearest 0.5, clamped to 4.0–9.0.
 
-### Deep Review (Enhanced)
+### Deep Review (Enhanced — Speaking)
 
 When Deep Review is enabled, the AI examiner also returns:
 - Specific grammar errors with corrections and rule explanations
 - Vocabulary upgrades (basic word → advanced alternatives + example)
 - 2-3 genuine strengths
 - 2-3 specific, actionable improvement priorities
+
+### Writing Scoring
+
+Writing evaluation uses the official 4 IELTS Writing criteria (each 25%):
+
+- **Task Achievement** — Does the essay address the prompt? (Task 1: data description; Task 2: argument development)
+- **Coherence & Cohesion** — Paragraphing, linking, logical flow
+- **Lexical Resource** — Vocabulary range and precision
+- **Grammatical Range & Accuracy** — Sentence variety and error-free usage
+
+Word count penalty: essays below the minimum (150 for Task 1, 250 for Task 2) are capped at Band 5 for Task Achievement. The enhanced review also provides paragraph-by-paragraph analysis, grammar corrections, and vocabulary upgrades.
 
 ## Question Bank
 
@@ -125,25 +171,22 @@ Mock tests automatically link Part 2 cue cards to related Part 3 discussion them
 
 ```
 src/speaking_test/
-    app.py              Streamlit UI — sidebar nav, all 5 modes
-    models.py           Shared data models (Question, EnhancedReview, MockTestState, etc.)
-    questions.py        Markdown parsers for 3 question sources + mock test assembly
-    evaluator.py        Provider-agnostic facade (Gemini or Ollama)
-    gemini_evaluator.py Gemini API calls — standard and enhanced evaluation
-    ollama_evaluator.py Ollama API calls — with response normalization for small models
-    scorer.py           Audio analysis — speech rate, pauses, pronunciation confidence
-    review.py           Progressive disclosure review renderer
-    database.py         SQLite persistence — sessions, attempts, trends
-docs/
-    ielts_questions.md
-    ielts_band9_answers.md
-    ielts_speaking_question_bank.md
-    ielts_speaking_master_pack_v2.md
-questions_answers.csv   Full question + answer export (553 questions)
+    app.py                Streamlit UI — sidebar nav, all 7 modes
+    models.py             Shared data models (Speaking + Writing)
+    questions.py          Speaking question loading + mock test assembly
+    writing_questions.py  Writing prompt loading from DB
+    evaluator.py          Provider-agnostic facade (Gemini or Ollama)
+    gemini_evaluator.py   Gemini API — speaking + writing evaluation
+    ollama_evaluator.py   Ollama API — with response normalization
+    scorer.py             Audio analysis — speech rate, pauses, pronunciation
+    review.py             Progressive disclosure review renderer (speaking + writing)
+    database.py           SQLite persistence — sessions, attempts, writing, documents
+scripts/
+    ingest_pdf.py             Standalone PDF ingestion (text + page images)
+    extract_writing_prompts.py  Writing prompt extraction from ingested pages
+pdf_extracted/                Auto-generated: markdown, JSON, page images
 data/
-    history.db          SQLite database (auto-created, gitignored)
-logs/
-    ollama.log          Ollama debug log (auto-created, gitignored)
+    history.db            SQLite database (auto-created, gitignored)
 ```
 
 ## Tips

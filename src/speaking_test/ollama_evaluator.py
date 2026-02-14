@@ -11,8 +11,18 @@ import httpx
 
 logger = logging.getLogger(__name__)
 
-from speaking_test.gemini_evaluator import ENHANCED_SYSTEM_PROMPT, SYSTEM_PROMPT
-from speaking_test.models import EnhancedReview, ContentEvaluation
+from speaking_test.gemini_evaluator import (
+    ENHANCED_SYSTEM_PROMPT,
+    SYSTEM_PROMPT,
+    WRITING_SYSTEM_PROMPT,
+    WRITING_ENHANCED_SYSTEM_PROMPT,
+)
+from speaking_test.models import (
+    EnhancedReview,
+    ContentEvaluation,
+    WritingEvaluation,
+    WritingEnhancedReview,
+)
 
 _OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
 _OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "deepseek-r1:8b")
@@ -266,3 +276,179 @@ def evaluate_answer_enhanced(
     data = _normalize_evaluation(data)
     logger.info("Normalized enhanced data: %s", json.dumps(data, default=str)[:500])
     return EnhancedReview.model_validate(data)
+
+
+# ---------------------------------------------------------------------------
+# Writing evaluation — Ollama
+# ---------------------------------------------------------------------------
+
+_WRITING_CRITERION_KEYS = [
+    "task_achievement", "coherence", "lexical_resource", "grammatical_range",
+]
+
+_WRITING_SCORE_ALIASES: dict[str, str] = {
+    "task_achievement_score": "task_achievement_score",
+    "task_response_score": "task_achievement_score",
+    "task_score": "task_achievement_score",
+    "coherence_score": "coherence_score",
+    "coherence_and_cohesion_score": "coherence_score",
+    "lexical_resource_score": "lexical_resource_score",
+    "vocabulary_score": "lexical_resource_score",
+    "lexical_score": "lexical_resource_score",
+    "grammatical_range_score": "grammatical_range_score",
+    "grammar_score": "grammatical_range_score",
+    "grammatical_accuracy_score": "grammatical_range_score",
+}
+
+_WRITING_FEEDBACK_ALIASES: dict[str, str] = {
+    "task_response_feedback": "task_achievement_feedback",
+    "task_feedback": "task_achievement_feedback",
+    "coherence_and_cohesion_feedback": "coherence_feedback",
+    "vocabulary_feedback": "lexical_resource_feedback",
+    "lexical_feedback": "lexical_resource_feedback",
+    "grammar_feedback": "grammatical_range_feedback",
+    "grammatical_accuracy_feedback": "grammatical_range_feedback",
+}
+
+_WRITING_NESTED_ALIASES: dict[str, str] = {
+    "task_response": "task_achievement",
+    "task": "task_achievement",
+    "coherence_and_cohesion": "coherence",
+    "vocabulary": "lexical_resource",
+    "lexical": "lexical_resource",
+    "grammar": "grammatical_range",
+    "grammatical_accuracy": "grammatical_range",
+}
+
+_WRITING_EVALUATION_SCHEMA = """\
+Return a JSON object with ALL of these keys. Use IELTS 0-9 band scores.
+Score the candidate's OWN essay. Write feedback referencing SPECIFIC phrases.
+
+Required keys:
+- "task_achievement_score": float (0-9, Task Achievement / Task Response)
+- "task_achievement_feedback": string
+- "coherence_score": float (0-9, Coherence & Cohesion)
+- "coherence_feedback": string
+- "lexical_resource_score": float (0-9, Lexical Resource)
+- "lexical_resource_feedback": string
+- "grammatical_range_score": float (0-9, Grammatical Range & Accuracy)
+- "grammatical_range_feedback": string
+- "overall_feedback": string (2-3 sentence examiner summary)"""
+
+_WRITING_ENHANCED_SCHEMA = """\
+Return a JSON object with ALL of these keys. Use IELTS 0-9 band scores.
+Score the candidate's OWN essay. Find REAL errors — do NOT invent examples.
+
+Required keys:
+- "task_achievement_score": float (0-9)
+- "task_achievement_feedback": string
+- "coherence_score": float (0-9)
+- "coherence_feedback": string
+- "lexical_resource_score": float (0-9)
+- "lexical_resource_feedback": string
+- "grammatical_range_score": float (0-9)
+- "grammatical_range_feedback": string
+- "overall_feedback": string (2-3 sentence examiner summary)
+- "grammar_corrections": list of objects with keys "original", "corrected", "explanation"
+- "vocabulary_upgrades": list of objects with keys "basic_word", "alternatives" (list), "example"
+- "paragraph_feedback": list of strings (1-2 sentence analysis per paragraph)
+- "strengths": list of strings
+- "improvement_priorities": list of strings"""
+
+
+def _normalize_writing_evaluation(raw: dict) -> dict:
+    """Normalize Ollama output for writing evaluation models."""
+    # Remap aliased flat keys
+    for alias, canonical in _WRITING_SCORE_ALIASES.items():
+        if alias in raw and canonical not in raw:
+            raw[canonical] = raw.pop(alias)
+    for alias, canonical in _WRITING_FEEDBACK_ALIASES.items():
+        if alias in raw and canonical not in raw:
+            raw[canonical] = raw.pop(alias)
+
+    # Remap aliased nested keys
+    for alias, canonical in _WRITING_NESTED_ALIASES.items():
+        if alias in raw and canonical not in raw:
+            raw[canonical] = raw.pop(alias)
+
+    # Build nested CriterionScore dicts
+    for key in _WRITING_CRITERION_KEYS:
+        score_key = f"{key}_score"
+        feedback_key = f"{key}_feedback"
+        val = raw.get(key)
+
+        if score_key in raw:
+            raw[key] = {
+                "score": raw.pop(score_key, 0),
+                "feedback": raw.pop(feedback_key, ""),
+            }
+        elif isinstance(val, (int, float)):
+            raw[key] = {"score": val, "feedback": ""}
+        elif isinstance(val, dict):
+            if "score" not in val:
+                val["score"] = 0
+            if "feedback" not in val:
+                val["feedback"] = ""
+        else:
+            raw[key] = {"score": 0, "feedback": ""}
+
+    if "overall_feedback" not in raw or not isinstance(raw.get("overall_feedback"), str):
+        raw["overall_feedback"] = ""
+
+    return raw
+
+
+def _build_writing_user_prompt(
+    prompt_text: str, essay_text: str, task_type: int,
+    task1_data_json: str | None = None,
+) -> str:
+    """Build user prompt for writing evaluation."""
+    task_label = "Task 1" if task_type == 1 else "Task 2"
+    min_words = 150 if task_type == 1 else 250
+    word_count = len(essay_text.split())
+
+    prompt = f"""## IELTS Writing {task_label}
+
+**Question/Prompt:**
+{prompt_text}
+
+**Candidate's Essay ({word_count} words, minimum {min_words}):**
+{essay_text}
+"""
+    if task1_data_json:
+        prompt += f"\n**Chart Data (JSON):**\n{task1_data_json}\n"
+    return prompt
+
+
+def evaluate_writing(
+    prompt_text: str,
+    essay_text: str,
+    task_type: int,
+    task1_data_json: str | None = None,
+) -> WritingEvaluation:
+    """Evaluate a writing essay via Ollama."""
+    system = WRITING_SYSTEM_PROMPT + "\n\n" + _WRITING_EVALUATION_SCHEMA
+    user = _build_writing_user_prompt(prompt_text, essay_text, task_type, task1_data_json)
+    raw_json = _chat(system, user)
+    logger.info("Ollama writing raw response: %s", raw_json)
+    data = json.loads(raw_json)
+    data = _normalize_writing_evaluation(data)
+    logger.info("Normalized writing data: %s", json.dumps(data, default=str)[:500])
+    return WritingEvaluation.model_validate(data)
+
+
+def evaluate_writing_enhanced(
+    prompt_text: str,
+    essay_text: str,
+    task_type: int,
+    task1_data_json: str | None = None,
+) -> WritingEnhancedReview:
+    """Evaluate writing with richer feedback via Ollama."""
+    system = WRITING_ENHANCED_SYSTEM_PROMPT + "\n\n" + _WRITING_ENHANCED_SCHEMA
+    user = _build_writing_user_prompt(prompt_text, essay_text, task_type, task1_data_json)
+    raw_json = _chat(system, user)
+    logger.info("Ollama writing enhanced raw response: %s", raw_json)
+    data = json.loads(raw_json)
+    data = _normalize_writing_evaluation(data)
+    logger.info("Normalized writing enhanced data: %s", json.dumps(data, default=str)[:500])
+    return WritingEnhancedReview.model_validate(data)

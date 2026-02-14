@@ -1,4 +1,4 @@
-"""Shared data models for IELTS Speaking Practice."""
+"""Shared data models for IELTS Speaking & Writing Practice."""
 
 from __future__ import annotations
 
@@ -172,3 +172,89 @@ class AttemptRecord:
     strengths: str = ""  # JSON string
     pronunciation_warnings: str = ""  # JSON string
     source: str = ""
+
+
+# ---------------------------------------------------------------------------
+# Writing evaluation models
+# ---------------------------------------------------------------------------
+
+class WritingEvaluation(BaseModel):
+    """Standard writing evaluation — 4 criteria + overall feedback."""
+    task_achievement: CriterionScore = Field(
+        description="Task 1: Task Achievement; Task 2: Task Response"
+    )
+    coherence: CriterionScore = Field(description="Coherence & Cohesion")
+    lexical_resource: CriterionScore = Field(description="Lexical Resource")
+    grammatical_range: CriterionScore = Field(
+        description="Grammatical Range & Accuracy"
+    )
+    overall_feedback: str = Field(description="Overall examiner summary")
+
+
+class WritingEnhancedReview(BaseModel):
+    """Enhanced writing review with corrections and upgrades."""
+    task_achievement: CriterionScore = Field(
+        description="Task 1: Task Achievement; Task 2: Task Response"
+    )
+    coherence: CriterionScore = Field(description="Coherence & Cohesion")
+    lexical_resource: CriterionScore = Field(description="Lexical Resource")
+    grammatical_range: CriterionScore = Field(
+        description="Grammatical Range & Accuracy"
+    )
+    overall_feedback: str = Field(description="Overall examiner summary")
+    grammar_corrections: list[GrammarCorrection] = Field(
+        default_factory=list,
+        description="Specific grammar errors with corrections",
+    )
+    vocabulary_upgrades: list[VocabularyUpgrade] = Field(
+        default_factory=list,
+        description="Vocabulary upgrade suggestions",
+    )
+    paragraph_feedback: list[str] = Field(
+        default_factory=list,
+        description="Per-paragraph analysis",
+    )
+    strengths: list[str] = Field(
+        default_factory=list,
+        description="2-3 specific things done well",
+    )
+    improvement_priorities: list[str] = Field(
+        default_factory=list,
+        description="2-3 specific, actionable improvement tips",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Writing data models
+# ---------------------------------------------------------------------------
+
+@dataclass
+class WritingPrompt:
+    id: int
+    test_type: str          # 'academic' | 'gt'
+    task_type: int           # 1 or 2
+    topic: str
+    prompt_text: str
+    chart_image_path: str | None = None
+    task1_data_json: str = ""
+
+
+@dataclass
+class WritingAttemptRecord:
+    id: int | None = None
+    session_id: int = 0
+    timestamp: str = ""
+    prompt_id: int = 0
+    task_type: int = 0
+    essay_text: str = ""
+    word_count: int = 0
+    task_score: float = 0.0
+    coherence_score: float = 0.0
+    lexical_score: float = 0.0
+    grammar_score: float = 0.0
+    overall_band: float = 0.0
+    examiner_feedback: str = ""
+    paragraph_feedback: list = field(default_factory=list)
+    grammar_corrections: list = field(default_factory=list)
+    vocabulary_upgrades: list = field(default_factory=list)
+    improvement_tips: list = field(default_factory=list)

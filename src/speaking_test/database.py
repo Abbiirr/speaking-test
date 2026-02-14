@@ -1,14 +1,17 @@
-"""SQLite persistence for IELTS Speaking practice history."""
+"""SQLite persistence for IELTS practice history (speaking + writing)."""
 
 from __future__ import annotations
 
 import csv
 import json
+import logging
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
 from speaking_test.models import AttemptRecord, SessionRecord
+
+logger = logging.getLogger(__name__)
 
 DB_DIR = Path(__file__).resolve().parent.parent.parent / "data"
 DB_PATH = DB_DIR / "history.db"
@@ -74,6 +77,105 @@ def _init_db(conn: sqlite3.Connection) -> None:
             band9_answer TEXT DEFAULT '',
             answer_variant TEXT DEFAULT ''
         )
+    """)
+
+    # --- Writing module tables ---
+    conn.executescript("""
+        -- PDF document tracking (hash-based idempotency)
+        CREATE TABLE IF NOT EXISTS documents (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            doc_hash TEXT NOT NULL UNIQUE,
+            file_name TEXT NOT NULL,
+            doc_type TEXT NOT NULL DEFAULT 'cambridge_book',
+            page_count INTEGER NOT NULL,
+            parser TEXT NOT NULL DEFAULT 'pymupdf',
+            parser_version TEXT NOT NULL,
+            ingested_at TEXT NOT NULL
+        );
+
+        -- Per-page extracted text
+        CREATE TABLE IF NOT EXISTS document_pages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            doc_id INTEGER NOT NULL,
+            page_no INTEGER NOT NULL,
+            text TEXT NOT NULL,
+            FOREIGN KEY (doc_id) REFERENCES documents(id),
+            UNIQUE (doc_id, page_no)
+        );
+
+        -- Extracted assets (full-page images)
+        CREATE TABLE IF NOT EXISTS document_assets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            doc_id INTEGER NOT NULL,
+            page_no INTEGER NOT NULL,
+            asset_type TEXT NOT NULL DEFAULT 'image',
+            file_path TEXT NOT NULL,
+            width INTEGER,
+            height INTEGER,
+            meta_json TEXT DEFAULT '',
+            FOREIGN KEY (doc_id) REFERENCES documents(id)
+        );
+
+        -- Writing question bank
+        CREATE TABLE IF NOT EXISTS writing_prompts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            test_type TEXT NOT NULL,
+            task_type INTEGER NOT NULL,
+            topic TEXT DEFAULT '',
+            prompt_text TEXT NOT NULL,
+            source_doc_id INTEGER,
+            source_page_no INTEGER,
+            chart_asset_id INTEGER,
+            task1_data_json TEXT DEFAULT '',
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (source_doc_id) REFERENCES documents(id),
+            FOREIGN KEY (chart_asset_id) REFERENCES document_assets(id)
+        );
+
+        -- Model/sample answers for calibration
+        CREATE TABLE IF NOT EXISTS writing_samples (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            prompt_id INTEGER NOT NULL,
+            band REAL NOT NULL,
+            essay_text TEXT NOT NULL,
+            examiner_notes TEXT DEFAULT '',
+            source TEXT DEFAULT '',
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (prompt_id) REFERENCES writing_prompts(id)
+        );
+
+        -- Writing attempt records
+        CREATE TABLE IF NOT EXISTS writing_attempts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id INTEGER NOT NULL,
+            timestamp TEXT NOT NULL,
+            prompt_id INTEGER NOT NULL,
+            task_type INTEGER NOT NULL,
+            essay_text TEXT NOT NULL,
+            word_count INTEGER NOT NULL,
+            task_score REAL NOT NULL,
+            coherence_score REAL NOT NULL,
+            lexical_score REAL NOT NULL,
+            grammar_score REAL NOT NULL,
+            overall_band REAL NOT NULL,
+            examiner_feedback TEXT DEFAULT '',
+            paragraph_feedback TEXT DEFAULT '',
+            grammar_corrections TEXT DEFAULT '',
+            vocabulary_upgrades TEXT DEFAULT '',
+            improvement_tips TEXT DEFAULT '',
+            provider TEXT NOT NULL,
+            raw_json TEXT DEFAULT '',
+            FOREIGN KEY (session_id) REFERENCES sessions(id),
+            FOREIGN KEY (prompt_id) REFERENCES writing_prompts(id)
+        );
+    """)
+
+    # FTS5 full-text search over page text (separate statement — virtual tables
+    # cannot be created inside executescript on some SQLite builds)
+    conn.execute("""
+        CREATE VIRTUAL TABLE IF NOT EXISTS document_pages_fts
+        USING fts5(text, doc_id UNINDEXED, page_no UNINDEXED,
+                   content='document_pages', content_rowid='id')
     """)
 
     # Migrate existing databases: add new columns if missing
@@ -396,6 +498,270 @@ def get_detailed_weaknesses(limit: int = 50) -> dict:
     }
     criterion_trends = {}
     rows_list = list(reversed(rows))  # oldest first
+    mid = len(rows_list) // 2
+    for label, col in criteria.items():
+        all_vals = [r[col] for r in rows_list if r[col] is not None and r[col] > 0]
+        if not all_vals:
+            continue
+        avg = round(sum(all_vals) / len(all_vals), 1)
+        if mid > 0 and len(rows_list) >= 4:
+            first_half = [r[col] for r in rows_list[:mid] if r[col] and r[col] > 0]
+            second_half = [r[col] for r in rows_list[mid:] if r[col] and r[col] > 0]
+            if first_half and second_half:
+                avg1 = sum(first_half) / len(first_half)
+                avg2 = sum(second_half) / len(second_half)
+                diff = avg2 - avg1
+                if diff > 0.3:
+                    direction = "improving"
+                elif diff < -0.3:
+                    direction = "declining"
+                else:
+                    direction = "stable"
+            else:
+                direction = "insufficient data"
+        else:
+            direction = "insufficient data"
+        criterion_trends[label] = {"avg": avg, "direction": direction}
+
+    return {
+        "grammar_errors": [
+            {"original": k[0], "corrected": k[1], "count": v}
+            for k, v in grammar_counter.most_common(5)
+        ],
+        "basic_words": [
+            {"word": k, "count": v}
+            for k, v in word_counter.most_common(5)
+        ],
+        "criterion_trends": criterion_trends,
+        "recurring_tips": [
+            {"tip": k, "count": v}
+            for k, v in tip_counter.most_common(5)
+        ],
+    }
+
+
+# ---------------------------------------------------------------------------
+# Writing module — database functions
+# ---------------------------------------------------------------------------
+
+def save_writing_attempt(session_id: int, attempt_data: dict) -> int:
+    """Insert a writing attempt record and update session stats."""
+    logger.info(
+        "Saving writing attempt: session=%d, task=%d, band=%.1f, words=%d",
+        session_id, attempt_data.get("task_type", 0),
+        attempt_data.get("overall_band", 0), attempt_data.get("word_count", 0),
+    )
+    conn = get_db()
+    ts = attempt_data.get("timestamp") or datetime.now(timezone.utc).isoformat()
+    cursor = conn.execute(
+        """INSERT INTO writing_attempts (
+            session_id, timestamp, prompt_id, task_type, essay_text, word_count,
+            task_score, coherence_score, lexical_score, grammar_score, overall_band,
+            examiner_feedback, paragraph_feedback, grammar_corrections,
+            vocabulary_upgrades, improvement_tips, provider, raw_json
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        (
+            session_id,
+            ts,
+            attempt_data["prompt_id"],
+            attempt_data["task_type"],
+            attempt_data["essay_text"],
+            attempt_data["word_count"],
+            attempt_data["task_score"],
+            attempt_data["coherence_score"],
+            attempt_data["lexical_score"],
+            attempt_data["grammar_score"],
+            attempt_data["overall_band"],
+            attempt_data.get("examiner_feedback", ""),
+            attempt_data.get("paragraph_feedback", ""),
+            attempt_data.get("grammar_corrections", ""),
+            attempt_data.get("vocabulary_upgrades", ""),
+            attempt_data.get("improvement_tips", ""),
+            attempt_data.get("provider", ""),
+            attempt_data.get("raw_json", ""),
+        ),
+    )
+    conn.commit()
+    _update_session_stats(session_id)
+    return cursor.lastrowid
+
+
+def get_writing_attempts(session_id: int | None = None) -> list[dict]:
+    """Query writing attempts, optionally filtered by session."""
+    conn = get_db()
+    if session_id is not None:
+        rows = conn.execute(
+            "SELECT * FROM writing_attempts WHERE session_id = ? ORDER BY id",
+            (session_id,),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            "SELECT * FROM writing_attempts ORDER BY id DESC LIMIT 100"
+        ).fetchall()
+    result = []
+    for r in rows:
+        d = dict(r)
+        for field in ("paragraph_feedback", "grammar_corrections",
+                       "vocabulary_upgrades", "improvement_tips"):
+            val = d.get(field, "")
+            if val:
+                try:
+                    d[field] = json.loads(val)
+                except (json.JSONDecodeError, TypeError):
+                    pass
+        result.append(d)
+    return result
+
+
+def get_all_writing_prompts() -> list[dict]:
+    """Return all prompts from the writing_prompts table."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT wp.*, da.file_path AS chart_image_path "
+        "FROM writing_prompts wp "
+        "LEFT JOIN document_assets da ON wp.chart_asset_id = da.id "
+        "ORDER BY wp.id"
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_writing_prompt_by_id(prompt_id: int) -> dict | None:
+    """Single prompt lookup with resolved chart image path."""
+    conn = get_db()
+    row = conn.execute(
+        "SELECT wp.*, da.file_path AS chart_image_path "
+        "FROM writing_prompts wp "
+        "LEFT JOIN document_assets da ON wp.chart_asset_id = da.id "
+        "WHERE wp.id = ?",
+        (prompt_id,),
+    ).fetchone()
+    return dict(row) if row else None
+
+
+def search_document_pages(query: str, limit: int = 20) -> list[dict]:
+    """FTS5 search over ingested document pages with snippets."""
+    logger.debug("FTS search: query=%r, limit=%d", query, limit)
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT dp.doc_id, dp.page_no, d.file_name, "
+        "snippet(document_pages_fts, 0, '<b>', '</b>', '...', 40) AS snippet "
+        "FROM document_pages_fts fts "
+        "JOIN document_pages dp ON dp.id = fts.rowid "
+        "JOIN documents d ON d.id = dp.doc_id "
+        "WHERE document_pages_fts MATCH ? "
+        "ORDER BY rank LIMIT ?",
+        (query, limit),
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_document_list() -> list[dict]:
+    """List all ingested documents."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT * FROM documents ORDER BY ingested_at DESC"
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_document_page_assets(doc_id: int, page_no: int) -> list[dict]:
+    """Get image assets for a specific document page."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT * FROM document_assets "
+        "WHERE doc_id = ? AND page_no = ? ORDER BY id",
+        (doc_id, page_no),
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_writing_samples(prompt_id: int) -> list[dict]:
+    """Get model/sample answers for a writing prompt."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT * FROM writing_samples WHERE prompt_id = ? ORDER BY band DESC",
+        (prompt_id,),
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_writing_criterion_trends(limit: int = 50) -> list[dict]:
+    """Writing band trends over time (4 criteria + overall)."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT timestamp, task_score, coherence_score, lexical_score, "
+        "grammar_score, overall_band FROM writing_attempts "
+        "ORDER BY id DESC LIMIT ?",
+        (limit,),
+    ).fetchall()
+    return [dict(r) for r in reversed(rows)]
+
+
+def get_writing_weaknesses() -> dict:
+    """Aggregate writing weakness analysis from recent attempts."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT grammar_corrections, vocabulary_upgrades, improvement_tips, "
+        "task_score, coherence_score, lexical_score, grammar_score, id "
+        "FROM writing_attempts ORDER BY id DESC LIMIT 50"
+    ).fetchall()
+
+    if not rows:
+        return {}
+
+    from collections import Counter
+
+    grammar_counter: Counter = Counter()
+    word_counter: Counter = Counter()
+    tip_counter: Counter = Counter()
+
+    for r in rows:
+        gc_raw = r["grammar_corrections"] or ""
+        if gc_raw:
+            try:
+                corrections = json.loads(gc_raw) if isinstance(gc_raw, str) else gc_raw
+                if isinstance(corrections, list):
+                    for item in corrections:
+                        if isinstance(item, dict):
+                            orig = item.get("original", "").strip()
+                            corr = item.get("corrected", "").strip()
+                            if orig and corr:
+                                grammar_counter[(orig, corr)] += 1
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+        vu_raw = r["vocabulary_upgrades"] or ""
+        if vu_raw:
+            try:
+                upgrades = json.loads(vu_raw) if isinstance(vu_raw, str) else vu_raw
+                if isinstance(upgrades, list):
+                    for item in upgrades:
+                        if isinstance(item, dict):
+                            word = item.get("basic_word", "").strip().lower()
+                            if word:
+                                word_counter[word] += 1
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+        tips_raw = r["improvement_tips"] or ""
+        if tips_raw:
+            try:
+                tips = json.loads(tips_raw) if isinstance(tips_raw, str) else tips_raw
+                if isinstance(tips, list):
+                    for tip in tips:
+                        if isinstance(tip, str) and tip.strip():
+                            tip_counter[tip.strip()] += 1
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+    criteria = {
+        "Task Achievement": "task_score",
+        "Coherence & Cohesion": "coherence_score",
+        "Lexical Resource": "lexical_score",
+        "Grammar": "grammar_score",
+    }
+    criterion_trends = {}
+    rows_list = list(reversed(rows))
     mid = len(rows_list) // 2
     for label, col in criteria.items():
         all_vals = [r[col] for r in rows_list if r[col] is not None and r[col] > 0]

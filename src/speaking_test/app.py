@@ -3,6 +3,7 @@ import os
 import re
 import tempfile
 import time
+from datetime import datetime, timezone
 
 import librosa
 import numpy as np
@@ -18,35 +19,58 @@ from speaking_test.database import (
     get_band_trend,
     get_criterion_trends,
     get_detailed_weaknesses,
+    get_document_list,
+    get_document_page_assets,
     get_recent_sessions,
     get_weak_areas,
+    get_writing_attempts,
+    get_writing_criterion_trends,
+    get_writing_prompt_by_id,
+    get_writing_weaknesses,
     save_attempt,
+    save_writing_attempt,
+    search_document_pages,
 )
+from speaking_test.eval_logger import init_eval_session, log_evaluation
 from speaking_test.evaluator import (
     compute_combined_band,
+    compute_writing_band,
     detect_fillers,
     evaluate_answer,
     evaluate_answer_enhanced,
+    evaluate_writing_enhanced,
+    get_last_eval_meta,
     get_provider,
     is_provider_configured,
+    writing_quality_checks,
 )
 from speaking_test.models import (
     AttemptRecord,
     EnhancedReview,
     MockTestResponse,
     MockTestState,
+    WritingEnhancedReview,
 )
 from speaking_test.questions import (
     assemble_mock_test,
     get_random_question,
     load_all_questions,
 )
-from speaking_test.review import render_review, render_review_from_dict
+from speaking_test.review import (
+    render_review,
+    render_review_from_dict,
+    render_writing_review,
+    render_writing_review_from_dict,
+)
 from speaking_test.scorer import analyze_audio, estimate_band, generate_feedback
+from speaking_test.writing_questions import (
+    get_random_writing_prompt,
+    load_writing_prompts,
+)
 
 load_dotenv()
 
-st.set_page_config(page_title="IELTS Speaking Practice", layout="centered")
+st.set_page_config(page_title="IELTS Practice", layout="centered")
 
 
 # ---------------------------------------------------------------------------
@@ -167,10 +191,10 @@ def save_attempt_from_eval(
 model = load_model()
 
 with st.sidebar:
-    st.title("IELTS Speaking")
+    st.title("IELTS Practice")
     mode = st.radio(
         "Mode",
-        ["Interview", "Mock Test", "Practice", "Transcribe", "History"],
+        ["Interview", "Mock Test", "Practice", "Transcribe", "Writing", "PDF Library", "History"],
         label_visibility="collapsed",
     )
 
@@ -318,6 +342,7 @@ def render_interview_mode():
         st.session_state["interview_question"] = qwa
         # Create a new session for this interview question
         st.session_state["interview_session_id"] = create_session("interview")
+        init_eval_session(st.session_state["interview_session_id"], "interview")
 
     qwa = st.session_state.get("interview_question")
     if qwa is None:
@@ -397,6 +422,7 @@ def render_interview_mode():
                         if not session_id:
                             session_id = create_session("interview")
                             st.session_state["interview_session_id"] = session_id
+                            init_eval_session(session_id, "interview")
                         save_attempt_from_eval(
                             session_id=session_id,
                             question_text=q.text,
@@ -409,6 +435,21 @@ def render_interview_mode():
                             band9_answer=qwa.band9_answer,
                             source=q.source,
                         )
+                        meta = get_last_eval_meta()
+                        log_evaluation(session_id, {
+                            "timestamp": datetime.now(timezone.utc).isoformat(),
+                            "session_id": session_id,
+                            "provider": meta.get("provider", ""),
+                            "model_name": meta.get("model_name", ""),
+                            "response_time_ms": meta.get("response_time_ms", 0),
+                            "mode": "interview",
+                            "type": "speaking",
+                            "part": q.part,
+                            "topic": q.topic,
+                            "question_text": q.text,
+                            "scores": combined,
+                            "examiner_feedback": content_eval.overall_feedback if content_eval else "",
+                        })
                     else:
                         # Fallback: show basic metrics
                         st.markdown("**Delivery Metrics**")
@@ -462,6 +503,7 @@ def render_mock_test_mode():
                 plan=plan, started=True
             )
             st.session_state["mock_test_session_id"] = create_session("mock_test")
+            init_eval_session(st.session_state["mock_test_session_id"], "mock_test")
             st.rerun()
         return
 
@@ -582,6 +624,21 @@ def render_mock_test_mode():
                         band9_answer=current_qwa.band9_answer,
                         source=current_qwa.question.source,
                     )
+                    meta = get_last_eval_meta()
+                    log_evaluation(session_id, {
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "session_id": session_id,
+                        "provider": meta.get("provider", ""),
+                        "model_name": meta.get("model_name", ""),
+                        "response_time_ms": meta.get("response_time_ms", 0),
+                        "mode": "mock_test",
+                        "type": "speaking",
+                        "part": current_part,
+                        "topic": current_qwa.question.topic,
+                        "question_text": current_qwa.question.text,
+                        "scores": combined,
+                        "examiner_feedback": content_eval.overall_feedback if content_eval else "",
+                    })
 
                 # Record response in state
                 state.responses.append(MockTestResponse(
@@ -669,7 +726,7 @@ def _render_mock_test_results(state: MockTestState):
 def render_history_mode():
     st.header("History")
 
-    tab1, tab2, tab3, tab4 = st.tabs(["Band Trend", "Criterion Breakdown", "Sessions", "Weaknesses"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Band Trend", "Criterion Breakdown", "Sessions", "Weaknesses", "Writing"])
 
     with tab1:
         data = get_band_trend(limit=50)
@@ -771,6 +828,331 @@ def render_history_mode():
                 for item in tips:
                     st.markdown(f"- {item['tip']} ({item['count']}x)")
 
+    with tab5:
+        # Writing band trend
+        writing_trends = get_writing_criterion_trends(limit=50)
+        if writing_trends:
+            wdf = pd.DataFrame(writing_trends)
+            wdf["timestamp"] = pd.to_datetime(wdf["timestamp"])
+            wdf = wdf.rename(columns={
+                "task_score": "Task Achievement",
+                "coherence_score": "Coherence",
+                "lexical_score": "Lexical Resource",
+                "grammar_score": "Grammar",
+                "overall_band": "Overall",
+            })
+            st.subheader("Writing Band Trends")
+            st.line_chart(
+                wdf,
+                x="timestamp",
+                y=["Task Achievement", "Coherence", "Lexical Resource", "Grammar", "Overall"],
+                y_label="Band Score",
+            )
+
+            # Writing sessions drill-down
+            st.subheader("Recent Writing Attempts")
+            writing_attempts = get_writing_attempts()
+            for att in writing_attempts[:20]:
+                prompt_info = get_writing_prompt_by_id(att["prompt_id"]) if att["prompt_id"] else None
+                prompt_label = prompt_info["prompt_text"][:60] if prompt_info else "Custom prompt"
+                label = (
+                    f"Task {att['task_type']} — Band {att['overall_band']} "
+                    f"— {att['timestamp'][:16]}"
+                )
+                with st.expander(label):
+                    st.caption(prompt_label)
+                    render_writing_review_from_dict(att)
+
+            # Writing weakness analysis
+            w_weaknesses = get_writing_weaknesses()
+            if w_weaknesses:
+                st.subheader("Writing Weakness Analysis")
+                w_trends = w_weaknesses.get("criterion_trends", {})
+                if w_trends:
+                    for label, data in w_trends.items():
+                        direction = data["direction"]
+                        icon = {"improving": "+", "declining": "-", "stable": "="}.get(
+                            direction, ""
+                        )
+                        st.markdown(
+                            f"- **{label}**: avg {data['avg']} ({direction} {icon})"
+                        )
+
+                w_grammar = w_weaknesses.get("grammar_errors", [])
+                if w_grammar:
+                    st.markdown("**Top Writing Grammar Mistakes**")
+                    for item in w_grammar:
+                        st.markdown(
+                            f"- ~~{item['original']}~~ &rarr; **{item['corrected']}** "
+                            f"({item['count']}x)"
+                        )
+        else:
+            st.info("No writing data yet. Complete some writing practice to see trends.")
+
+
+# ---------------------------------------------------------------------------
+# Writing mode
+# ---------------------------------------------------------------------------
+
+def render_writing_mode():
+    st.header("Writing")
+
+    provider = get_provider()
+    provider_ready = is_provider_configured()
+    if not provider_ready:
+        if provider == "ollama":
+            st.error(
+                "**Ollama is not reachable.** Make sure it's running:\n\n"
+                "```\nollama serve\n```"
+            )
+        else:
+            st.error(
+                "**GEMINI_API_KEY not found.** Add it to your `.env` file:\n\n"
+                "```\nGEMINI_API_KEY=your-key-here\n```"
+            )
+
+    # Controls
+    col1, col2 = st.columns(2)
+    with col1:
+        test_type = st.selectbox("Test Type", ["academic", "gt"], format_func=lambda x: "Academic" if x == "academic" else "General Training")
+    with col2:
+        task_type = st.selectbox("Task", [1, 2], format_func=lambda x: f"Task {x}")
+
+    # Load prompts from DB
+    prompts = load_writing_prompts(test_type=test_type, task_type=task_type)
+
+    # Topic filter (optional)
+    topics = sorted(set(p.topic for p in prompts if p.topic))
+    topic_filter = None
+    if topics:
+        topic_choice = st.selectbox("Topic (optional)", ["Any"] + topics)
+        if topic_choice != "Any":
+            topic_filter = topic_choice
+
+    use_db_prompt = bool(prompts)
+
+    if use_db_prompt:
+        if st.button("Get Prompt", type="primary"):
+            prompt = get_random_writing_prompt(
+                prompts, test_type=test_type, task_type=task_type, topic=topic_filter
+            )
+            if prompt:
+                st.session_state["writing_prompt"] = prompt
+                st.session_state["writing_session_id"] = create_session("writing")
+                init_eval_session(st.session_state["writing_session_id"], "writing")
+            else:
+                st.warning("No prompts found matching your filters.")
+
+        prompt = st.session_state.get("writing_prompt")
+        if prompt is None:
+            st.info('Click **"Get Prompt"** to get a writing question, or type your own below.')
+    else:
+        st.info("No writing prompts in the database yet. You can type a custom prompt below, or run the PDF ingestion scripts to populate the question bank.")
+        prompt = None
+
+    # Display prompt
+    if prompt is not None:
+        st.subheader(f"Task {prompt.task_type} — {prompt.test_type.upper()}")
+        st.markdown(prompt.prompt_text)
+
+        # Show chart image for Task 1
+        if prompt.task_type == 1 and prompt.chart_image_path:
+            from pathlib import Path
+            img_path = Path(__file__).resolve().parent.parent.parent / prompt.chart_image_path
+            if img_path.exists():
+                st.image(str(img_path), caption="Task 1 — Source Chart")
+
+    # Custom prompt fallback
+    custom_prompt = st.text_area(
+        "Or paste your own prompt:",
+        height=80,
+        placeholder="Paste a writing prompt here if not using the database...",
+        key="custom_writing_prompt",
+    )
+
+    # Determine which prompt text to use
+    active_prompt_text = ""
+    active_prompt_id = 0
+    active_task1_data = None
+    if prompt is not None:
+        active_prompt_text = prompt.prompt_text
+        active_prompt_id = prompt.id
+        active_task1_data = prompt.task1_data_json or None
+    elif custom_prompt.strip():
+        active_prompt_text = custom_prompt.strip()
+
+    # Essay input
+    st.divider()
+    min_words = 150 if task_type == 1 else 250
+    essay = st.text_area(
+        f"Write your essay (minimum {min_words} words):",
+        height=400,
+        placeholder="Start writing your essay here...",
+        key="writing_essay_input",
+    )
+
+    # Live word count
+    word_count = len(essay.split()) if essay.strip() else 0
+    if word_count > 0:
+        if word_count >= min_words:
+            st.caption(f":green[Word count: {word_count}] (minimum: {min_words})")
+        else:
+            st.caption(f":red[Word count: {word_count}] (minimum: {min_words})")
+
+    # Timer
+    timer_col1, timer_col2 = st.columns(2)
+    with timer_col1:
+        suggested_time = 20 if task_type == 1 else 40
+        st.caption(f"Suggested time: {suggested_time} minutes")
+
+    # Submit
+    if st.button("Submit Essay", type="primary", key="submit_writing"):
+        if not active_prompt_text:
+            st.warning("Please get a prompt or paste a custom one first.")
+        elif not essay.strip():
+            st.warning("Please write your essay first.")
+        elif not provider_ready:
+            st.error("Cannot evaluate — AI provider is not configured.")
+        else:
+            # Pre-LLM checks
+            checks = writing_quality_checks(essay, task_type)
+            if checks["is_empty"]:
+                st.error("Essay is empty.")
+                return
+            if not checks["meets_minimum"]:
+                st.warning(
+                    f"Your essay has {checks['word_count']} words — "
+                    f"below the minimum of {checks['min_words']}. "
+                    "Task Achievement will be capped at Band 5."
+                )
+
+            # Evaluate
+            eval_result = None
+            try:
+                with st.spinner("Evaluating your essay..."):
+                    eval_result = evaluate_writing_enhanced(
+                        prompt_text=active_prompt_text,
+                        essay_text=essay,
+                        task_type=task_type,
+                        task1_data_json=active_task1_data,
+                    )
+            except Exception as e:
+                st.error(f"Evaluation failed ({provider}): {e}")
+                return
+
+            overall = compute_writing_band(eval_result)
+
+            st.divider()
+            render_writing_review(eval_result, checks["word_count"], task_type)
+
+            # Save to database
+            session_id = st.session_state.get("writing_session_id")
+            if not session_id:
+                session_id = create_session("writing")
+                st.session_state["writing_session_id"] = session_id
+                init_eval_session(session_id, "writing")
+
+            attempt_data = {
+                "prompt_id": active_prompt_id,
+                "task_type": task_type,
+                "essay_text": essay,
+                "word_count": checks["word_count"],
+                "task_score": eval_result.task_achievement.score,
+                "coherence_score": eval_result.coherence.score,
+                "lexical_score": eval_result.lexical_resource.score,
+                "grammar_score": eval_result.grammatical_range.score,
+                "overall_band": overall,
+                "examiner_feedback": eval_result.overall_feedback,
+                "provider": provider,
+            }
+
+            if isinstance(eval_result, WritingEnhancedReview):
+                attempt_data["paragraph_feedback"] = json.dumps(
+                    eval_result.paragraph_feedback
+                )
+                attempt_data["grammar_corrections"] = json.dumps(
+                    [gc.model_dump() for gc in eval_result.grammar_corrections]
+                )
+                attempt_data["vocabulary_upgrades"] = json.dumps(
+                    [vu.model_dump() for vu in eval_result.vocabulary_upgrades]
+                )
+                attempt_data["improvement_tips"] = json.dumps(
+                    eval_result.improvement_priorities
+                )
+                attempt_data["raw_json"] = eval_result.model_dump_json()
+
+            save_writing_attempt(session_id, attempt_data)
+
+            meta = get_last_eval_meta()
+            log_evaluation(session_id, {
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "session_id": session_id,
+                "provider": meta.get("provider", ""),
+                "model_name": meta.get("model_name", ""),
+                "response_time_ms": meta.get("response_time_ms", 0),
+                "mode": "writing",
+                "type": "writing",
+                "task_type": task_type,
+                "word_count": checks["word_count"],
+                "scores": {
+                    "overall_band": overall,
+                    "task_achievement": eval_result.task_achievement.score,
+                    "coherence": eval_result.coherence.score,
+                    "lexical_resource": eval_result.lexical_resource.score,
+                    "grammatical_range": eval_result.grammatical_range.score,
+                },
+                "examiner_feedback": eval_result.overall_feedback,
+            })
+
+            st.success("Essay evaluated and saved!")
+
+
+# ---------------------------------------------------------------------------
+# PDF Library mode
+# ---------------------------------------------------------------------------
+
+def render_pdf_library_mode():
+    st.header("PDF Library")
+
+    # FTS search
+    query = st.text_input("Search ingested documents:", placeholder="e.g. writing task 1")
+
+    if query.strip():
+        results = search_document_pages(query.strip())
+        if results:
+            st.caption(f"Found {len(results)} result(s)")
+            for r in results:
+                with st.expander(
+                    f"{r['file_name']} — Page {r['page_no']}"
+                ):
+                    st.markdown(r["snippet"], unsafe_allow_html=True)
+
+                    # Show page image if available
+                    assets = get_document_page_assets(r["doc_id"], r["page_no"])
+                    for asset in assets:
+                        from pathlib import Path
+                        img_path = Path(__file__).resolve().parent.parent.parent / asset["file_path"]
+                        if img_path.exists():
+                            st.image(str(img_path), caption=f"Page {r['page_no']}")
+        else:
+            st.info("No results found.")
+
+    # Document browser
+    st.divider()
+    st.subheader("Ingested Documents")
+    docs = get_document_list()
+    if not docs:
+        st.info(
+            "No documents ingested yet. Run the ingestion script:\n\n"
+            "```\nuv run --extra pdf python scripts/ingest_pdf.py pdf/\n```"
+        )
+    else:
+        for doc in docs:
+            st.markdown(
+                f"- **{doc['file_name']}** — {doc['page_count']} pages "
+                f"(ingested {doc['ingested_at'][:16]})"
+            )
+
 
 # ---------------------------------------------------------------------------
 # Main routing
@@ -784,5 +1166,9 @@ elif mode == "Interview":
     render_interview_mode()
 elif mode == "Mock Test":
     render_mock_test_mode()
+elif mode == "Writing":
+    render_writing_mode()
+elif mode == "PDF Library":
+    render_pdf_library_mode()
 elif mode == "History":
     render_history_mode()

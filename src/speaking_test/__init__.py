@@ -1,4 +1,4 @@
-"""IELTS Speaking Practice — centralized logging setup."""
+"""IELTS Practice (Speaking + Writing) — centralized logging setup."""
 
 import logging
 import os

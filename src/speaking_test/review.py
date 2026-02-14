@@ -4,7 +4,12 @@ from __future__ import annotations
 
 import streamlit as st
 
-from speaking_test.models import EnhancedReview, ContentEvaluation
+from speaking_test.models import (
+    EnhancedReview,
+    ContentEvaluation,
+    WritingEvaluation,
+    WritingEnhancedReview,
+)
 
 
 def render_review(
@@ -206,3 +211,151 @@ def render_review_from_dict(attempt: dict) -> None:
     if attempt.get("band9_answer"):
         with st.expander("Reference Answer"):
             st.markdown(attempt["band9_answer"])
+
+
+# ---------------------------------------------------------------------------
+# Writing review rendering
+# ---------------------------------------------------------------------------
+
+def render_writing_review(
+    eval_result: WritingEvaluation | WritingEnhancedReview,
+    word_count: int,
+    task_type: int,
+) -> None:
+    """Render a writing evaluation with progressive disclosure."""
+    from speaking_test.gemini_evaluator import compute_writing_band
+
+    overall = compute_writing_band(eval_result)
+    min_words = 150 if task_type == 1 else 250
+
+    # 1. Band scores
+    st.metric("Overall Band Score", f"{overall}")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Task Achievement", f"{eval_result.task_achievement.score}")
+    c2.metric("Coherence", f"{eval_result.coherence.score}")
+    c3.metric("Lexical Resource", f"{eval_result.lexical_resource.score}")
+    c4.metric("Grammar", f"{eval_result.grammatical_range.score}")
+
+    # 2. Word count indicator
+    if word_count >= min_words:
+        st.success(f"Word count: **{word_count}** (minimum: {min_words})")
+    else:
+        st.error(
+            f"Word count: **{word_count}** — below minimum of {min_words}. "
+            "This will cap Task Achievement at Band 5."
+        )
+
+    # 3. Examiner summary
+    st.markdown(f"*{eval_result.overall_feedback}*")
+
+    is_enhanced = isinstance(eval_result, WritingEnhancedReview)
+
+    # 4. Strengths
+    if is_enhanced and eval_result.strengths:
+        st.markdown("**Strengths**")
+        for s in eval_result.strengths:
+            st.markdown(f"- {s}")
+
+    # 5. Improvement priorities
+    if is_enhanced and eval_result.improvement_priorities:
+        st.markdown("**Priorities**")
+        for tip in eval_result.improvement_priorities:
+            st.markdown(f"- {tip}")
+
+    # 6. Paragraph feedback
+    if is_enhanced and eval_result.paragraph_feedback:
+        with st.expander(f"Paragraph Analysis ({len(eval_result.paragraph_feedback)})"):
+            for i, pf in enumerate(eval_result.paragraph_feedback, 1):
+                st.markdown(f"**Paragraph {i}:** {pf}")
+
+    # 7. Grammar corrections
+    if is_enhanced and eval_result.grammar_corrections:
+        with st.expander(f"Grammar Corrections ({len(eval_result.grammar_corrections)})"):
+            for gc in eval_result.grammar_corrections:
+                st.markdown(
+                    f"~~{gc.original}~~ &rarr; **{gc.corrected}**\n\n"
+                    f"*{gc.explanation}*"
+                )
+                st.divider()
+
+    # 8. Vocabulary upgrades
+    if is_enhanced and eval_result.vocabulary_upgrades:
+        with st.expander(f"Vocabulary Upgrades ({len(eval_result.vocabulary_upgrades)})"):
+            for vu in eval_result.vocabulary_upgrades:
+                alts = ", ".join(f"**{a}**" for a in vu.alternatives)
+                st.markdown(
+                    f"*{vu.basic_word}* &rarr; {alts}\n\n"
+                    f"Example: *{vu.example}*"
+                )
+                st.divider()
+
+    # 9. Detailed criterion breakdown
+    with st.expander("Detailed Criterion Breakdown"):
+        st.markdown(
+            f"**Task Achievement ({eval_result.task_achievement.score}):** "
+            f"{eval_result.task_achievement.feedback}"
+        )
+        st.markdown(
+            f"**Coherence & Cohesion ({eval_result.coherence.score}):** "
+            f"{eval_result.coherence.feedback}"
+        )
+        st.markdown(
+            f"**Lexical Resource ({eval_result.lexical_resource.score}):** "
+            f"{eval_result.lexical_resource.feedback}"
+        )
+        st.markdown(
+            f"**Grammar ({eval_result.grammatical_range.score}):** "
+            f"{eval_result.grammatical_range.feedback}"
+        )
+
+
+def render_writing_review_from_dict(attempt: dict) -> None:
+    """Render a writing review from a database attempt dict (History mode)."""
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Task", f"{attempt.get('task_score', 0)}")
+    c2.metric("Coherence", f"{attempt.get('coherence_score', 0)}")
+    c3.metric("Lexical", f"{attempt.get('lexical_score', 0)}")
+    c4.metric("Grammar", f"{attempt.get('grammar_score', 0)}")
+
+    if attempt.get("examiner_feedback"):
+        st.markdown(f"*{attempt['examiner_feedback']}*")
+
+    # Paragraph feedback
+    pf = attempt.get("paragraph_feedback")
+    if isinstance(pf, list) and pf:
+        with st.expander(f"Paragraph Analysis ({len(pf)})"):
+            for i, p in enumerate(pf, 1):
+                st.markdown(f"**Paragraph {i}:** {p}")
+
+    # Grammar corrections
+    gc = attempt.get("grammar_corrections")
+    if isinstance(gc, list) and gc:
+        with st.expander(f"Grammar Corrections ({len(gc)})"):
+            for item in gc:
+                if isinstance(item, dict):
+                    st.markdown(
+                        f"~~{item.get('original', '')}~~ &rarr; "
+                        f"**{item.get('corrected', '')}**\n\n"
+                        f"*{item.get('explanation', '')}*"
+                    )
+                    st.divider()
+
+    # Vocabulary upgrades
+    vu = attempt.get("vocabulary_upgrades")
+    if isinstance(vu, list) and vu:
+        with st.expander(f"Vocabulary Upgrades ({len(vu)})"):
+            for item in vu:
+                if isinstance(item, dict):
+                    alts = ", ".join(f"**{a}**" for a in item.get("alternatives", []))
+                    st.markdown(
+                        f"*{item.get('basic_word', '')}* &rarr; {alts}\n\n"
+                        f"Example: *{item.get('example', '')}*"
+                    )
+                    st.divider()
+
+    # Improvement tips
+    tips = attempt.get("improvement_tips")
+    if isinstance(tips, list) and tips:
+        st.markdown("**Improvement Tips**")
+        for tip in tips:
+            st.markdown(f"- {tip}")
