@@ -1,0 +1,618 @@
+[
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Consumer Durables Ownership",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe table below shows the consumer durables (telephone, refrigerator, etc.) owned in Britain from 1972 to 1983.\nWrite a report for a university lecturer describing the information shown below.\nYou should write at least 150 words.Consumer durables\nPercentage of\nhouseholds with:\ncentral heating\ntelevision\nvideo\nvacuum cleaner\nrefrigerator\nwashing machine\ndishwasher\ntelephone\n1972\n3?\n93\n87\n73\n66\n42\n1974\n43\n95\n89\n81\n68\n50\n1976\n48\n96\n92\n88\n71\n54\n1978\n52\n96\n92\n91\n75\n3\n60\n1979\n55\n97\n59\n93\n74\n3\n67\n94\n93\n78\n4\n75\n1982\n60\n97\n95\n93\n79\n4\n76\n1983\n64\n98\n18\n94\n80\n5\n77",
+    "source": "IELTS 2, Test 1",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "This model has been prepared by an examiner as an example of a very good answer. However, please note that this is just one example out of many possible approaches.\nThe chart shows that the percentage of British households with a range of consumer durables steadily increased between 1972 and 1983. The greatest increase was in telephone ownership, rising from 42% in 1972 to 77% in 1983. Next came central-heating ownership, rising from 37% of households in 1972 to 64% in 1983. The percentage of households with a refrigerator rose 21% over the same period and of those with a washing machine by 14%. Households with vacuum-cleaners, televisions and dishwashers increased by 8%, 5% and 2% respectively. In 1983, the year of their introduction, 18% of households had a video recorder.\nThe significant social changes reflected in the statistics are that over the period the proportion of British houses with central heating rose from one to two thirds, and of those with a phone from under a half to over three-quarters. Together with the big increases in the ownership of washing machines and refrigerators, they are evidence of both rising living standards and the trend to lifestyles based on comfort and convenience.",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Fatherhood vs Motherhood",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nPresent a written argument or case to an educated reader with no specialist knowledge of the following topic.\n\"Fatherhood ought to be emphasised as much as motherhood. The idea that women are solely responsible for deciding whether or not to have babies leads on to the idea that they are also responsible for bringing the children up.\"\nTo what extent do you agree or disagree?\nYou should write at least 250 words.\nYou should use your own ideas, knowledge and experience and support your arguments with examples and relevant evidence.",
+    "source": "IELTS 2, Test 1",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "This model has been prepared by an examiner as an example of a very good answer. However, please note that this is just one example out of many possible approaches.\nbelieve that child-rearing should be the responsibility of both parents and that, whilst the roles within that partnership may be different, they are nevertheless equal in importance. In some societies, it has been made easier over the years for single parents to raise children on their own. However, this does not mean that the traditional family, with both parents providing emotional support and role-models for their children, is not the most satisfactory way of bringing up children.\nOf crucial importance, in my opinion, is how we define 'responsible for bringing the children up'. At its simplest, it could mean giving the financial support necessary to provide a home, food and clothes and making sure the child is safe and receives an adequate education. This would be the basic definition.\nThere is, however, another possible way of defining that part of the quotation. That would say it is not just the fathers responsibility to provide the basics for his children, while his wife involves herself in the everyday activity of bringing them up. Rather, he should share those daily duties, spend as much time as his job allows with his children, play with them, read to them, help directly with their education, participate very fully in their lives and encourage them to share his.\nIt is this second, fuller, concept of 'fatherhood' that I am in favour of, although I also realise how difficult it is to achieve sometimes. The economic and employment situation in many countries means that jobs are getting more, not less, stressful, requiring long hours and perhaps long journeys to work as well. Therefore it may remain for many a desirable ideal rather than an achievable reality.",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Leisure Time",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe chart below shows the amount of leisure time enjoyed by men and women of different employment status.\nWrite a report for a university lecturer describing the information shown below.\nYou should write at least 150 words.",
+    "source": "IELTS 2, Test 2",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "This model has been prepared by an examiner as an example of a very good answer. However, please note that this is just one example out of many possible approaches.\nThe chart shows the number of hours of leisure enjoyed by men and women in a typical week in 1998-9, according to gender and employment status.\nAmong those employed full-time, men on average had fifty hours of leisure, whereas women had approximately thirty-seven hours. There were no figures given for male part-time workers, but female part-timers had forty hours of leisure time, only slightly more than women in full-time employment, perhaps reflecting their work in the home.\nIn the unemployed and retired categories, leisure time showed an increase for both sexes, as might have been expected. Here too, men enjoyed more leisure time - over eighty hours, compared with seventy hours for women, perhaps once again reflecting the fact that women spend more time working in the home than men.\nLastly, housewives enjoyed approximately fifty-four hours of leisure, on average. There were no figures given for househusbands! Overall, the chart demonstrates that in the categories for which statistics on male leisure time were available, men enjoyed at least ten hours of extra leisure time.",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Prevention vs Cure",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nPresent a written argument or case to an educated reader with no specialist knowledge of the following topic.\n\"Prevention is better than cure.\"\nOut of a country's health budget, a large proportion should be diverted from treatment to spending on health education and preventative measures.\nTo what extent do you agree or disagree with this statement?\nYou should write at least 250 words.\nYou should use your own ideas, knowledge and experience and support your arguments with examples and relevant evidence.",
+    "source": "IELTS 2, Test 2",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "This model has been prepared by an examiner as an example of a very good answer. However, please note that this is just one example out of many possible approaches.\nOf course it goes without saying that prevention is better than cure. That is why, in recent years, there has been a growing body of opinion in favour of putting more resources into health education and preventive measures. The argument is that ignorance of, for example, basic hygiene or the dangers of an unhealthy diet or lifestyle needs to be combated by special nationwide publicity campaigns, as well as longer-term health education.\nObviously,there is a strong human argument for catching any medical condition as early as possible. There is also an economic argument for doing so. Statistics demonstrate the cost-effectiveness of treating a condition in the early stages, rather than delaying until more expensive and prolonged treatment is necessary. Then there are social or economic costs, perhaps in terms of loss of earnings for the family concerned or unemployed benefit paid by the state.\nSo far so good, but the difficulties start when we try to define what the 'proportion' of the budget \"should be, particularly if the funds will be 'diverted from treatment'. Decisions on exactly how much of the total health budget should be spent in this way are not a matter for the non-specialist, but should be made on the basis of an accepted health service model.\nThis is the point at which real problems occur - the formulation of the model. How do we accurately measure which health education campaigns are effective in both medical and financial terms? How do we agree about the medical efficacy of various screening programmes, for example, when the medical establishment itself does not agree? A very rigorous process of evaluation is called for, so that we can make informed decisions.",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Travel Abroad",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe first chart below shows the results of a survey which sampled a cross-section of 100,000 people asking if they travelled abroad and why they travelled for the period 1994-98. The second chart shows their destinations over the same period.\nWrite a report for a university lecturer describing the information shown below.\nYou should write at least 150 words.\nVISITS ABROAD BY UK RESIDENTS BY PURPOSE OF VISIT (1994-98)\n1994\n15,246\n3,155\n2,689\n982\n22,072\n1995\n14,898\n3,188\n2,628\n896\n21,610\n1996\n17,896\n3,249\n2,774\n1,030\n24,949\n1997\n19,703\n3,639\n3,051\n1,054\n27,447\n1998\n20,700\n3,957\n3,181\n990\n28.828\nDESTINATIONS OF VISITS ABROAD BY UK RESIDENTS BY MAIN REGION (1994-98)\n1994\n1995\n1996\n1997\n1998\nWestern Europe\nNorth America\n19,371 \n919\n18,944 \n914\n21,877 \n1,167\n23,661 \n1,559\n24,519 \n1,823\n• Other areas\n1,782\n1,752\n1,905\n2,227\n2,486\nTotal\n22,072\n21,610\n24,949\n27,447\n28,828",
+    "source": "IELTS 2, Test 3",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "According to statistical Information, the main reason for traveling abroad is holidays, business, and visits to friends and relatives. Indeed, there is a steady increase in the number of holiday makers; while in 1996 there were about 17,896 of the sample in 1998 there were 20,700 of them. Moreover, with the Introduction of more countries within the EC market, travelling for business has also increased. Although there is not a big decrement 3,957 traveled abroad for business during 1998 compared with 3,249 in 1996. Finally, traveling abroad for visiting friends and relatives shows a steady Increase over the period 1994—1998. While there were about 2,628 travelers in 1995 in 1998 the number increased to 3,181 in 1998. Consequently, there is a steady increase in three main reasons for travelling abroad; Holidays, business, or to visit relatives and friends.\nIn addition, there is also an Increased change in the destinations which people tend to prefer for travelling. The area which appear to be more popular among travellers is Western Europe. Indeed, while in 1994 only 19,371 of the sample preferred to spend their holiday (or other reasons) in that main region, there was an increase to 24,519 in 1998. North America and other areas appeared also favourable. In 1996, there were 1,167 going to North America and 1,905 to other areas. These numbers increased to 1,823 and 2,486 accordingly. Statistical figures prove that Western Europe seems to be the most favourable place for holiday makers while North America and other areas follow behind.",
+        "examiner_notes": "The task is competently reported, although some details are ignored. The message is clear and there is good use of cohesive devices to organise points. Despite some minor errors in spelling and agreement, a good range of structures is used.",
+        "type": "sample"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Capital Punishment",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nPresent a written argument or case to an educated reader with no specialist knowledge of the following topic.\n\"Without capital punishment (the death penalty) our lives are less secure and crimes of violence increase. Capital punishment in essential to control violence in society.\"\nTo what extent do you agree or disagree with this opinion?\nYou should write at least 250 words.\nYou should use your own ideas, knowledge and experience and support your arguments with examples and relevant evidence.",
+    "source": "IELTS 2, Test 3",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "This is an answer written by a candidate who achieved a Band 8 score. Here is the examiner's comment:\nThis response is very fluent and well expressed in an appropriate register. A range of relevant issues is skilfully presented and discussed. The argument is logically developed and well organised. A wide range of structures and vocabulary are used appropriately and accurately with only minor flaws.\nBefore talking about the essential role of death penalty, you have to think about the meaning, and the purpose, of any kind of punishment. If you consider that the purpose is to prevent the guilty from being nasty again, you can be seduced by an argumentation in favour of the suppression of capital punishment. But you have to think about another aspect of the problem: a punishment is also useful to impress people, to make them fear the law. In fact, let's take the example of a young misfit, which has grown in a violent atmosphere, influenced by older delinquents, etc. He lives in the streets, he's got no aim but to survive. This is the kind of person who could possibly kill someone for money, or even for fun. Why would he fear prison? Life would be easier for him there. In addition, in many cases, when you behave normally, you can benefit from penalty reductions. This young misfit needs to be impressed, he needs to know that the law is a frontier. When you cross it, you can lose your life. That is why capital punishment helps keeping a distance between robbery and murder. If you abolish it, you suppress the difference between these two types of crime, which are completely different.\nBut there is also a limit to define: even if death penalty is unavoidable, it would be a crime to apply it to inadequate cases. If there is no premeditation or past facts which can justify such a punishment, it is far too strict to apply death penalty. That is why the lawmakers have to establish precisely the context in which capital punishment can be pronounced. That is the price to pay to limit violence without using excessive violence...",
+        "examiner_notes": "",
+        "type": "sample"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Imprisonment Statistics",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe table below shows the figures for imprisonment in five countries between 1930 and 1980.\nWrite a report for a university, lecturer describing the information shown below.\nYou should write at least 150 words.",
+    "source": "IELTS 2, Test 4",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "This model has been prepared by an examiner as an example of a very good answer. However please note that this is just one example out of many possible approaches.\nThe table shows that the figures for imprisonment in the five countries mentioned indicate no overall pattern of increase or decrease. In fact there is considerable fluctuation from country to country.\nIn Great Britain the numbers in prison have increased steadily from 30 000 in 1930 to 80,000 in 1980. On the other hand in Australia, and particularly in New Zealand the numbers fell markedly from 1930 to 1940. Since then they have increased gradually, apart from in 1980 when the numbers in prison in New Zealand fell by about 30,000 from the 1970 total. Canada is the only country in which the numbers in prison have decreased over the period 1930 to 1980, although there have been fluctuations in this trend. The figures for the United States indicate the greatest number of prisoners compared to the other four countries but population size needs to be taken into account in this analysis. The prison population in the United States increased rapidly from 1970 to 1980 and this must be a worrying trend.",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Women's Role in Society",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nPresent a written argument or case to an educated reader with no specialist knowledge of the following topic.\nThe position of women in society has changed markedly in the last twenty years. Many of the problems young people now experience, such as juvenile delinquency, arise from the fact that many married women now work and are not at home to care for their children.\nTo what extent do you agree or disagree with this opinion?\nYou should write at least 250 words.\nYou should use your own ideas, knowledge and experience and support your arguments with examples and relevant evidence.",
+    "source": "IELTS 2, Test 4",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "This model has been prepared by an examiner as an example of a very good answer. However, please note that this is just one example out of many possible approaches.\nIt is certainly true that the position of women in society has undergone a dramatic change in the past twenty years but I do not feel that this is a direct cause of the indisputable increase in juvenile-related problems during this period.\nIt is now accepted that young women should find work on leaving school; indeed to rely totally on their parents' financial support is no longer an option in many families. Likewise, once they get married, the majority of women continue working since the financial pressures of setting up a house and establishing a reasonable standard of living often require two incomes.\nTwenty years ago it was common for women to give up work once they had children and devote their time to caring for their children. This is no longer the general rule and the provision of professionally-run child care facilities and day nurseries have removed much of the responsibility for child rearing that used to fall to mothers. However, these facilities come at a cost and often require two salaries coming into a family to be afforded.\nI do not believe that the increase in the number of working mothers has resulted in children being brought up less well than previously. Indeed it could be argued that by giving mothers the opportunity to work and earn extra money children can be better provided for than previously. There is more money for luxuries and holidays and a more secure family life is possible. Of course there are limits as to the amount of time ideally should be spent away from home and the ideal scenario would be for one of the parents (often the wife) to have a part-time job and thus be available for their children before and after school. It is important to establish the correct balance between family life and working life.",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "gt",
+    "task_type": 1,
+    "topic": "Library Book Return",
+    "prompt_text": "WRITING TASK 1 (GENERAL TRAINING)\nYou should spend no more than 20 minutes on this task.\nYou borrowed some books from your school or college library. Unfortunately you have to go away to visit a sick relative and cannot return the books in time.\nWrite a letter to the library. Explain what has happened and tell them what you want to do about it.\nYou should write at least 150 words.\nYou do NOT need to write your own address.\nBegin your letter as follows:\nDear ,",
+    "source": "IELTS 2, GT Test A",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "This model has been prepared by an examiner as an example of a very good answer. However, please note that this is just one example out of many possible approaches.\nDear Sir or Madam,\nI am writing this letter to explain why I have been unable to return the three books I have out on three-day loan, which are now overdue. After taking the books out on 16th March, I had an urgent phone call from my elderly aunt's neighbour to say that my aunt had had a fall and had been taken into hospital. I am her only surviving relative in this country, so I felt I had to go and see her immediately. I travelled down to Surrey the following morning, thinking I would stay for only two or three days. Unfortunately, my aunt's condition has only improved very slowly, so I have had to stay here longer than expected. However, the hospital says that if all goes well, she should be able to go home in two or three days' time, in which case I will be back at the beginning of next week.\nDealing in mind the circumstances I trust you will kindly waive any fines that may have accumulated.\nYours sincerely",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "gt",
+    "task_type": 2,
+    "topic": "Population Control",
+    "prompt_text": "WRITING TASK 2 (GENERAL TRAINING)\nYou should spend no more than 40 minutes on this task.\nAs part of a class assignment you have to write about the following topic.\nIt is sometimes necessary and right for a government to control the population in this way.\nDo you agree or disagree?\nGive reasons for your answer.\nYou should write at least 250 words.",
+    "source": "IELTS 2, GT Test A",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "This model has been prepared by an examiner as an example of a very good answer. However, please note that this is just one example out of many possible approaches.\nIt is certainly very understandable that some governments should start looking at ways of limiting their populations to a sustainable figure. In the past, populations were partly regulated by frequent war and widespread disease, but in recent years the effects of those factors have been diminished. Countries can be faced with a population that is growing much faster than she nation's food resources or employment opportunities and whose members can be condemned to poverty by the need to feed extra mouths. They identify population control as a means to raising living standards.\nBut how should it be achieved? Clearly, this whole area is a very delicate personal and cultural issue. Many people feel that this is not a matter for the state. They feel this is one area of life where they have the right to make decisions for themselves. For that reason, it would seem that the best approach would be to work by persuasion rather than compulsion This could be done by a process of education that points out the way a smaller family can mean an improved quality of life for the family members, as well as less strain on the country's perhaps very limited, resources.\nThis is the preferred way. Of course if this does not succeed within a reasonable time scale, it may be necessary to consider other measures. such as tax incentives or child-benefit payments for small families only. These are midway between persuasion and compulsion\nSo. yes. it is sometimes necessary, but governments should try very hard to persuade first. They should also remember that this is a very delicate area indeed, and that social engineering can create as many problems as it solves?",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "gt",
+    "task_type": 1,
+    "topic": "Lost Luggage",
+    "prompt_text": "WRITING TASK 1 (GENERAL TRAINING)\nYou should spend no more than 20 minutes on this task.\nYou travelled by plane last week and your suitcase was lost.\nYou have still heard nothing from the airline company.\nWrite to the airline and explain what happened. Describe your suitcase and tell them what was in it. Find out what they are going to do about it.\nYou should write at least 150 words.\nYou do NOT need to write your own address.\nBegin your letter as follows:\nDear ,",
+    "source": "IELTS 2, GT Test B",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "This is an answer written by a candidate who achieved a Band 7 score. Here is the examiner's comment:\nThe response is relevant and fairly fluent, although some aspects of the task could be more fully developed. The message is well organised and can be followed throughout. A fairly good range of vocabulary and structure is used, although occasional spelling errors and faulty word choice detract slightly from the overall fluency.\nDear Sirs,\nI was one of the passengers who took the flight from Narita (Tokyo) to Heathrow (London) on 5 August. Unfortunately, my suitcase did not come out after the flight. Although I have explained this Mr. McDonald who was in charge at the Luggage Claim Office I have not heard from him as of now.\nMy suit case is grey Samsonite whose size is 10 x 95 cm. There are 3 steckers on one side and 1 heart shaped stecker on the other side. My initials \"AR\" are also written on both sides.\nThere are a few books and a copy of my thesis in that suitcase, which I need for the conference on 19 August.\nSo I would deeply appreciate it if you could give me a prompt reply at your most convenient. My flight number, luggage claim number and address are written below.\nFlight No : NH 101\nLuggage Claim No : 00026\nAddress : 6H Silver Street\nLondon.NWI6 \n5AL\nYours Faithfully.",
+        "examiner_notes": "",
+        "type": "sample"
+      }
+    ]
+  },
+  {
+    "test_type": "gt",
+    "task_type": 2,
+    "topic": "Moving to English-Speaking Countries",
+    "prompt_text": "WRITING TASK 2 (GENERAL TRAINING)\nYou should spend no more than 40 minutes on this task.\nAs part of a class assignment you have to write about the following topic.\nMillions of people every year move to English-speaking countries such as Australia, Britain or America, in order to study at school, college or university.\nWhy do so many people want to study in English?\nWhy is English such an important international language?\nGive reasons for your answer.\nYou should write at least 250 words.",
+    "source": "IELTS 2, GT Test B",
+    "samples": [
+      {
+        "band": 6.0,
+        "essay_text": "This is an answer written by a candidate who achieved a Band 6 score. Here is the examiner's comment:\nThis response is underlength and is marked down because of this. Only a few relevant ideas are presented and these are used rather repetitively and are insufficiently developed or supported. However, the writing communicates fluently and a satisfactory range of structures and vocabulary are used.\nI am not surprise when I read in the newspapers that many people move to English speaking countries. I am an engineer in a process control since ten years and I understand the necessity of English language. For example, when I read technical English specifications, when I meet Japanese Industrials to build together some electronic materials or when I go on holidays in Italy where the best way (for me) to communicate is to speak English. Therefore, today, it's necessary to learn English and the best way is to study in English as soon as possible when we are at school but also when we have a job. It's so Important to communicate with foreigners, because of work. For example: to seafoods in USA, to build electronic cards with the Japanese, to obtain a certification with FDA (American organization) in order to sell some pharmaceutical products. In fact, jt's Important for everybody, the workers, the visitors, the scientists, etc ...\nThese are the main reason which explain why so many people go to English speaking countries (the best way to learn) and why English is such an Important International language (the communication between many the people over the world).",
+        "examiner_notes": "",
+        "type": "sample"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Urban population growth",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe graph below gives information about the percentage of the population in four Asian countries living in cities from 1970 to 2020, with predictions for 2030 and 2040.\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\nWrite at least 150 words.",
+    "source": "Cambridge IELTS 18, Test 1",
+    "samples": [
+      {
+        "band": 6.0,
+        "essay_text": "The line graph illustrates the proportion of urban citizens in Philippines, Malaysia, Thailand and Indonesia between 1970 and 2020, with the expected population in 2030 and 2040. Overall, it can be easily seen that all four countries has a dramatic rise in population, starting at the lowest point in 1970 and being projected to reach the peak in 2040. Malaysia and Indonesia saw a slightly rise in population, respectively from 30 to about 45 and around 30 to over 50 percent from 1970 to 2020. After that, both countries has climbed rapidly until now before being predicted to continue increasing for the next 20 years. After almost remaining in the 1990s, Philippines percentage increased dramatically to reach about 41 percent in 2000 and dropped to 40% in 2010. Then, this country faced slightly rise in 2020. Meanwhile, Thailand reached approximate 30%, in 2000 and saw not much changes until 2020. Both two countries are projected to increase in population in 2030 and 2040.",
+        "examiner_notes": "This response covers the requirements of the task. There is an overview in the second paragraph and key features are presented for each country, with main trends identified. Ideas are grouped together with a clear overall progression: countries with a similar trend are presented in the same paragraph, first Malaysia and Indonesia, then Thailand and the Philippines. There is some effective use of linkers [Overall | After that | Meanwhile] and other cohesive devices [respectively | this country], but a few errors remain [Both two]. Vocabulary includes a range, with some less common examples [proportion | expected population | dramatic rise | projected to reach the peak]. There are some errors [slightly / slight | almost remaining | approximate / approximately], which do not impede communication. The mix of grammatical structures is good, with some complex sentence forms [being predicted to continue increasing for the next 20 years]. Some errors remain, but they rarely reduce communication. To improve the Band Score for this response, there could be more detail on the similarity of the trends on the graph, more detail on data from 1990 onwards and fewer errors in spelling and grammar. However, this is a good response that does address the requirements of the task.",
+        "type": "sample"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Science and improving lives",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nWrite about the following topic:\nThe most important aim of science should be to improve people's lives.\nTo what extent do you agree or disagree with this statement?\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\nWrite at least 250 words.",
+    "source": "Cambridge IELTS 18, Test 1",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "Scientific developments are occurring at a great rate but some of them do not seem to be of help to people. In fact, sometimes scientific innovations are regretted by those who invented them. This essay will argue that science should never harm people but scientists should aim to further their understanding as much as to improve people's lives. On one hand, there is a strong argument that the public good should be the top priority for scientists. They are the ones who have the potential to make discoveries and invent things that can change the world. Electricity, modern medicine, telecommunications and the internet are just some of the scientific innovations that have changed lives for the better. On the other hand, sometimes scientists do research just in the hope of adding to their knowledge. While they should make absolutely sure that their experiments do no harm, they may not know until they have finished how their findings will be used and whether they will improve people's lives. The scientist Nobel invented dynamite to help with mining, not knowing that it would one day be used in weapons, and the scientist who discovered the life-saving drug penicillin did so quite by chance. Overall, it seems that science should improve the lives of people and that ought to be one of its aims. However, knowledge and discovery are aims in themselves and are just as important for scientists. Sometimes scientists do not know how their scientific breakthroughs will be used until their work is done.",
+        "examiner_notes": "This response presents a well-developed response to the question and concludes that the aim of scientific discoveries should be to improve people's lives, but that the process often results in unexpected outcomes. The candidate agrees with but adds to the statement. This is acceptable in a 'to what extent' question, as the candidate is explaining that the extent cannot always be predicted. The candidate presents the argument that the true aim of science is gaining new knowledge and discoveries. They agree that this should be to improve people's lives but that the results can't be predicted. The second paragraph gives examples of discoveries that have changed people's lives for the better [Electricity, modern medicine, telecommunications and the internet]. To improve the response, this paragraph could be expanded so that the list of discoveries is fully aligned with the question.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Household income distribution",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe chart below shows the number of households in the US by their annual income in 2007, 2011 and 2015.\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\nWrite at least 150 words.",
+    "source": "Cambridge IELTS 18, Test 2",
+    "samples": [
+      {
+        "band": 5.5,
+        "essay_text": "The graph illustrate the data of different levels of annual wage of families in the United States in 2007, 2011 and 2015. As far as the number of families whose annual income was less than $25,000, it began with around 25 million in 2007, then increased to approximately 30 million in 2011, but decreased by 1 million years later, similarly, those of families that earned $25,000 to $49,994 were about 30 million in 2007, after that it rose to nearly 40 million in 2011. Finally it decreased to around 35 million in 2015. In contrast, the groups of families which have high income, including $50,000 to $74,999 and $100,000 or more, experienced a drop in 2011, but their data went up in 2015. Interesting things could be seen in the group of middle income, the data remained the same in 2007, 2011 and 2015.",
+        "examiner_notes": "This response does present most of the data within the bar chart and the key features required. To improve the response, an overview of the information should be included, for example: Across the 8 years, households with incomes below $50,000 rose, then fell back slightly, households with incomes of over $75,000 fell slightly then increased and those with the mid-level incomes remained the same. The information is arranged coherently, starting with the details for the lower-income households, then the higher, then the mid-section. There are some effective cohesive devices [As far as | Similarly | By contrast]. The vocabulary is suitable for the task, but there is an error [around / approximately] which is not helpful when reporting the details. There is a mix of simple and complex structures, with sentences that contain multiple clauses. There are some examples of missing capitalisation [United States] with some errors [remain / remained]. To improve the response, it is important to re-read to check for small errors with vocabulary and to include an overview or summary of the salient information.",
+        "type": "sample"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "University education focus",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nWrite about the following topic:\nSome university students want to learn about other subjects in addition to their main subjects. Others believe it is more important to give all their time and attention to studying for a qualification.\nDiscuss both these views and give your own opinion.\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\nWrite at least 250 words.",
+    "source": "Cambridge IELTS 18, Test 2",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "Students attend university to improve their prospects and find suitable employment after graduation. For this reason, some feel that they should focus all their energy on their main subjects to gain a relevant qualification. Others want a more well-rounded education, so they try to learn about additional subjects. It is perfectly reasonable for students to enter university with a strong sense of curiosity and a desire to learn as much as possible. Unfortunately, we tend to put subjects into artificial boxes, suggesting that business, art and science are not connected. If students become too focused on a single area, it may stifle their initial curiosity, limiting their potential. They could also graduate with a very narrow skill set that doesn't translate well to the current job market, which often favours those who have taken a multidisciplinary approach to their studies. Despite this, caution is certainly needed. The more we learn about a subject, the more complex it becomes. Gaining an in-depth, specialist knowledge of a subject requires a certain level of focus and dedication over a long period. If we try to learn about too many things at once, our knowledge may lack the depth required to obtain a qualification. If they are not careful, young people could begin to lose interest in their main subjects, which would be detrimental to their studies. While learning about other subjects is not necessarily a bad thing, I believe university students should ensure that their main subjects remain the priority so that they do not lose sight of their objective: gaining a qualification. Then they can calculate how much time, energy and headspace they have left for learning about other topics.",
+        "examiner_notes": "This response addresses both parts of the task and presents a clear opinion at the end. The second paragraph explains how the current university system is set up to [put subjects into artificial boxes] and how this narrow focus can disadvantage students. The third paragraph presents the benefits of [Gaining an in-depth, specialist knowledge] and the dangers of trying to include too much. Both sides of the question are addressed in well-developed paragraphs. To improve the response, it would be helpful to set out the opinion at the start, for added continuity of the position. Vocabulary is natural and sophisticated [stifle their initial curiosity | Gaining an in-depth, specialist knowledge | detrimental to their studies] without errors. Grammatical structures are wide-ranging, with a range of tenses and conditional [if] and modal [may | could | would | can] structures embedded in complex, flexible sentences. This is a high-level response which fully addresses the task.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Library floor plan changes",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe diagram below shows the floor plan of a public library 20 years ago and how it looks now.\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\nWrite at least 150 words.",
+    "source": "Cambridge IELTS 18, Test 3",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "The diagrams show (Central Library before and after changes were made to its layout. Earlier, the library has been updated to include dedicated spaces for events and now has an open space in the centre. Twenty years ago, to the left of the entrance there was a reading room with newspapers and magazines and to the right there was an enquiry desk. Now there's a computer room on the left and a cafe where the information desk once was. Most fiction has moved to the right-hand side of the room and all reference books are now on the left. There is a smaller information desk with self-service machines in what once was the adult non-fiction section. There was a room at the back left-hand corner that had computer games, CDs and videos that has since been enlarged and houses children's fiction. It has a space with two sofas where storytelling events are held. There is a lecture room in the back right-hand corner where children's books used to be.",
+        "examiner_notes": "This response covers the main changes that have occurred over the 20-year period. An overview is presented in the second paragraph which is quite general: it refers to the [dedicated spaces for events] but this could be improved by giving a summary of the key changes (dedicated spaces for events, self-service facilities and a cafe). Ideas are arranged logically: the changes to the front of the library are presented in the third paragraph and the changes to the back section in the final paragraph. This shows a logical approach to reporting the changes and there is some good cohesion [once was | now on the left | has since been]. There is a good range of vocabulary. In this kind of task, vocabulary from the floor plan needs to be used to report the changes, but the use of different words shows some flexibility and precision [been updated | dedicated spaces | houses]. In terms of grammar, there are error-free sentences and some variation in structures used when describing changes [has been updated | what once was | has since been enlarged]. The response could be improved by extending the overview to include more of a summary of the main changes but overall, this response captures the main changes in a logical way.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Urbanisation pros and cons",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nWrite about the following topic:\nIn many countries around the world, rural people are moving to cities, so the population in the countryside is decreasing.\nDo you think this is a positive or a negative development?\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\nWrite at least 250 words.",
+    "source": "Cambridge IELTS 18, Test 3",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "Statistics show that the world's population is increasing rapidly. It is expected that most of us will be living in cities within the next few decades. The question of whether urbanisation is a positive or negative development remains controversial. A rapid influx of people moving from rural to urban areas is bound to cause problems, firstly pressure on resources such as housing and transportation intensifies. It is becoming difficult for many people to afford adequate housing in cities. A byproduct of this is the creation of slums causing low-income families to group together in neglected parts of the city. These people often become trapped in a cycle of poverty that is difficult to escape. As mentioned above, the growth of urban areas can also lead to severe traffic congestion because more and more vehicles travel into the city from the suburbs. This has many knock-on effects, such as problems with air quality. It also leads many city dwellers to experience mental health issues because travelling across large cities is tiring and stressful. All of this being said, I don't believe that urbanisation is a wholly negative development. There are advantages to living in large cities that are well managed. For example, there are more schools which means more education opportunities. Access to higher-quality health care is often better in cities, and many cities have also introduced ride-sharing, e-bikes and park and ride services that reduce environmental problems. My opinion is that many of the problems associated with urbanisation are avoidable but dealing with increasing populations in cities is a formidable challenge. How governments, businesses and society respond to this challenge will dramatically affect the future of our world.",
+        "examiner_notes": "This response addresses both sides of the question and presents a position, that the movement to cities is not a wholly negative development. The second and third paragraphs lay out the problems that can be caused by a rapid influx of people to urban areas [housing | transportation | traffic congestion] and the fourth paragraph presents some of the advantages [education opportunities | higher-quality health care | environmental transport initiatives]. However, the part of the question about 'the population in the countryside decreasing' is not covered. The candidate would need to include it to provide a full answer to this question. Information and ideas are logically organised and there is a clear progression, starting with the challenges and ending with a range of advantages.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Metal price fluctuations",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe graph below shows the average monthly change in the prices of three metals during 2014.\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\nWrite at least 150 words.",
+    "source": "Cambridge IELTS 18, Test 4",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "From the line graph, we can see the average monthly rise or fall in how much copper, nickel and zinc cost throughout 2014. Overall, nickel started with the highest percentage change of the three but ended with the lowest. Zinc started with the smallest change and ended with the highest, and copper prices fluctuated. Prices for all three metals dipped in June. In January, the price of nickel was up by 1 percent, but this dropped to negative three percent in June, ending the year with a one percent increase in both November and December. Zinc began the year with an increase of two percent and in May, the price was dropping by slightly less than one percent. It rose again, increasing by a percentage point in July, August and September. Copper saw its most dramatic increase in February, with three percent and the price fell in June (a one percent decrease). The change was negative until October/November when it began to rise.",
+        "examiner_notes": "This response reports the main data for each of the three metals. There is an introduction in the first paragraph and an overview in the second, followed by the presentation of the main trends of all three categories in the third. Some details are missing (copper after September and no percentage changes for any metal from July to September). The candidate identifies the 'dip' for all three in June, but to score more highly, they could also have mentioned that overall, percentage changes fell at the beginning of the year, remained static from July to September and rose after October to the end of the year. Information is arranged coherently; each metal is taken in turn for data reporting. There is good use of cohesive devices [Overall | but | with | when], but there could be more. Vocabulary is adequate with some attempts to use less common items [fluctuated | dramatic increase] and attempts to use synonyms [ended with the lowest | dipped | dropped]. There is a lack of complex structures, as most sentences are simple or compound. However, there is some variety in structures, including comparatives [highest | smallest | most dramatic] and continuous tenses [was dropping]. To improve the response, the candidate could extend the overview to reflect some common trends and should include some of the missing details.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Ageing population benefits",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nWrite about the following topic:\nIn many countries, people are now living longer than ever before. Some people say an ageing population creates problems for governments. Other people think there are benefits if society has more elderly people.\nTo what extent do the advantages of having an ageing population outweigh the disadvantages?\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\nWrite at least 250 words.",
+    "source": "Cambridge IELTS 18, Test 4",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "The population in most parts of the world is ageing; people are living longer and there are fewer younger people in many places as birth rates fall. This phenomenon has pros and cons, but this essay will contend that, on balance, the advantages of having an older population outweigh the negatives. The first issue that occurs to many people when considering the ageing population is the expense. If people live longer, they may have more than 30 years of retirement and may need to be supported financially by the government or their families. If they experience age-related illness, this impacts the health system and states up resources needed by other people in society. What's more, when older people are financially independent, it might be hard for younger people if they have to compete to get a foot in the door of the housing market or gain employment. That being said, older people have a lot to contribute in terms of wisdom, experience and skills. Many people are active and productive for longer than their counterparts were before years ago and are an asset to the economy and society well into their old age. They are able to work for longer and after retirement they contribute in many ways too, such as by doing charitable work, spending money as consumers and supporting their families. Grandparents often care for their young grandchildren, making it easier for both parents to work. While it is true that an ageing population poses challenges for governments, it is clear that these are outweighed by the significant benefits that elderly people bring to society.",
+        "examiner_notes": "This is a good response to the task. Both sides of the argument are presented, with the ideas extended for both. The candidate makes their position clear from the beginning, that there are more advantages than disadvantages. The second paragraph addresses the expense of looking after the elderly, the health system and the cost for governments. It also captures the challenge that older people take up houses and jobs so younger people cannot progress. The third paragraph presents the advantages of the [wisdom, experience and skills] older people can bring: that they are more active and remain productive for longer, not only working, but also [doing charitable work, spending money as consumers, supporting their families and even grandchildren for the working parents]. This means that the conclusion is relevant and justified.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Tourists and Market Share",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe charts below show the number of Japanese tourists travelling abroad between 1985 and 1995 and Australia's share of the Japanese tourist market.\n\nWrite a report for a university lecturer describing the information shown below.\n\nYou should write at least 150 words.",
+    "source": "Cambridge IELTS 3, Test 1",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Sports and International Tensions",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\n\nPresent a written argument or case to an educated reader with no specialist knowledge of the following topic.\n\nPopular events like the football World Cup and other international sporting occasions are essential in easing international tensions and releasing patriotic emotions in a safe way.\n\nTo what extent do you agree or disagree with this opinion?\n\nYou should use your own ideas, knowledge and experience and support your arguments with examples and relevant evidence.\n\nYou should write at least 250 words.",
+    "source": "Cambridge IELTS 3, Test 1",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Consumer Goods Spending",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe chart below shows the amount spent on six consumer goods in four European countries.\n\nWrite a report for a university lecturer describing the information shown below.\n\nYou should write at least 150 words.",
+    "source": "Cambridge IELTS 3, Test 2",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "The chart shows that Britain, among the four European countries listed, has spent most heavily on the range of consumer goods included. In every case, British spending is considerably higher than that of other countries; only in the case of tennis racquets does another country, Italy, come close. In contrast, Germany is generally the lowest spender. This is most evident in photographic film, where Germany spends much less than Britain. Germany only spends more than another country, France, in two cases; tennis racquets and perfumes. Meanwhile, France and Italy generally maintain middle positions, averaging approximately similar spending overall. Specifically, France spends more on CDs and photographic film but less on tennis racquets than Italy does. Italy's spending on personal stereos is only marginally greater than that of France, while spending on toys is equal between the two. It is clear from the data given that there are some significant differences in spending habits within Europe.",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Technology and Traditional Skills",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\n\nPresent a written argument or case to an educated reader with no specialist knowledge of the following topic.\n\nWhen a country develops its technology, the traditional skills and ways of life die out. It is pointless to try and keep them alive.\n\nTo what extent do you agree or disagree with this opinion?\n\nYou should use your own ideas, knowledge and experience and support your arguments with examples and relevant evidence.\n\nYou should write at least 250 words.",
+    "source": "Cambridge IELTS 3, Test 2",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "Overall, I disagree with the opinion expressed, I would like to begin by pointing out that 'traditional skills and ways of life' are not automatically of one country, but of a culture or community. In many ways, the history of civilisation is the history of technology: from the discovery of fire to the invention of the wheel to the development of the Internet we have been moving on from previous ways of doing things. Some technologies, such as weapons of mass destruction, are of negative impact. Others, such as medical advances, positively help people to live better or longer, and so very much help traditional ways of life. Surely, few people would seek to preserve such traditions as living in caves. Interestingly, technology can positively contribute to the keeping alive of traditional skills and ways of life. For example, the populations of some islands are too small to have normal schools. Rather than breaking up families by sending children to the mainland, education authorities have been able to use the Internet to deliver schooling online. In addition, the Internet, and modern refrigeration techniques, are being used to keep alive the traditional skills of producing salmon; it can now be ordered from, and delivered to, anywhere in the world. In conclusion, without suggesting that all technology is necessarily good, I think it is by no means 'pointless', in any way, to try to keep traditions alive with technology. We should not ignore technology, because it can be our friend and support our way of life.",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Education and Science Participation",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe charts below show the levels of participation in education and science in developing and industrialised countries in 1980 and 1990.\n\nWrite a report for a university lecturer describing the information shown below.\n\nYou should write at least 150 words.",
+    "source": "Cambridge IELTS 3, Test 3",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Child Work",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\n\nPresent a written argument or case to an educated reader with no specialist knowledge of the following topic.\n\nIn many countries children are engaged in some kind of paid work. Some people regard this as completely wrong, while others consider it as valuable work experience, important for learning and taking responsibility.\n\nWhat are your opinions on this?\n\nYou should use your own ideas, knowledge and experience and support your arguments with examples and relevant evidence.\n\nYou should write at least 250 words.",
+    "source": "Cambridge IELTS 3, Test 3",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Unemployment Rates",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe graph below shows the unemployment rates in the US and Japan between March 1993 and March 1999.\n\nWrite a report for a university lecturer describing the information shown below.\n\nYou should write at least 150 words.",
+    "source": "Cambridge IELTS 3, Test 4",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Health, Education and Trade",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\n\nPresent a written argument or case to an educated reader with no specialist knowledge of the following topic.\n\nImprovements in health, education and trade are essential for the development of poorer nations. However, the governments of richer nations should take more responsibility for helping the poorer nations in such areas.\n\nTo what extent do you agree or disagree with this opinion?\n\nYou should use your own ideas, knowledge and experience and support your arguments with examples and relevant evidence.\n\nYou should write at least 250 words.",
+    "source": "Cambridge IELTS 3, Test 4",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "gt",
+    "task_type": 1,
+    "topic": "Starting New Job",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\n\nYou are due to start a new job next week but you will not be able to because you have some problems.\n\nWrite a letter to your new employer. In your letter\n• explain your situation\n• describe your problems\n• tell him/her when you think you can start.\n\nYou should write at least 150 words.\n\nYou do NOT need to write your own address. Begin your letter as follows:\n\nDear...............,",
+    "source": "Cambridge IELTS 3, GT Test A",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "gt",
+    "task_type": 2,
+    "topic": "Children's Leisure Activities",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\n\nYou have been asked to write about the following topic.\n\nSome people believe that children's leisure activities must be educational, otherwise they are a complete waste of time.\n\nDo you agree or disagree?\n\nGive reasons for your answer and include any relevant examples from your experience.\n\nYou should write at least 250 words.",
+    "source": "Cambridge IELTS 3, GT Test A",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "gt",
+    "task_type": 1,
+    "topic": "Airport Development",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\n\nYou are unhappy about a plan to make your local airport bigger and increase the number of flights. You live near the airport.\n\nWrite a letter to your local newspaper. In your letter\n• explain where you live\n• describe the problem\n• give reasons why you do not want this development.\n\nYou should write at least 150 words.\n\nYou do NOT need to write your own address.\n\nBegin your letter as follows:\n\nDear Sir/Madam,",
+    "source": "Cambridge IELTS 3, GT Test B",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "gt",
+    "task_type": 2,
+    "topic": "Families and Closeness",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\n\nYou have been asked to write about the following topic.\n\nIt is generally accepted that families are not as close as they used to be.\n\nGive some reasons why this change has happened and suggest how families could be brought closer together.\nInclude any relevant examples from your experience.\n\nYou should write at least 250 words.",
+    "source": "Cambridge IELTS 3, GT Test B",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "",
+        "examiner_notes": "",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Adult Education Survey",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe charts below show the results of a survey of adult education. The first chart shows the reasons why adults decide to study. The pie chart shows how people think the costs of adult education should be shared.\nWrite a report for a university lecturer, describing the information shown below.\nYou should write at least 150 words.\n\nInterest in subject\nHow the costs of each\n course should be shared\nTo gain qualifications\nHelpful for current job\nTo improve prospects\n of promotion\nEnjoy\nlearning/studying\nTo able to change\njobs\nTo meet people\n\nTaxpayer\n25%\nIndividual\n40%\nEmployer\n35%",
+    "source": "IELTS 1, Practice Test 1",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "The pie chart illustrates the opinions of the public regarding the distribution of costs for adult education courses. The bar chart reveals the primary motivations for adults to participate in such courses.\n\nThe most significant factor prompting adults to study is to improve their job prospects, with 25% of those surveyed citing this as their main reason. This is closely followed by the desire to gain qualifications, which accounts for 20% of responses. Other motivations include enhancing current employment, enjoying the learning process, meeting new people, and changing careers, each receiving approximately 15% of the total.\n\nRegarding the allocation of costs, the majority of people believe that individuals should bear the main expense, with 40% holding this view. Employers are thought to cover 35% of the costs, while taxpayers are expected to contribute only 25%. This indicates a clear preference for personal responsibility in funding education.\n\nOverall, the data suggests that while financial burden is a consideration, personal development and career advancement are the dominant drivers for adult education participation.",
+        "examiner_notes": "A comprehensive overview of the data; appropriate vocabulary; clear structure with introduction, body paragraphs, and conclusion; accurate data reporting; cohesive linking words.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Music Importance",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nPresent a written argument or case to an educated reader with no specialist knowledge of the following topic:\nThere are many different types of music in the world today. Why do we need music? Is the traditional music of a country more important than the International music that is heard everywhere nowadays?\nYou should write at least 250 words.\nUse your own ideas, knowledge and experience and support your arguments with examples and relevant evidence.",
+    "source": "IELTS 1, Practice Test 1",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "Music serves several essential functions in human society. It provides entertainment, expresses emotions, fosters cultural identity, and can even influence behavior. While traditional music often embodies cultural heritage and history, international music benefits from global accessibility and diverse influences.\n\nTraditional music holds significant value as it preserves cultural identity and historical narratives. For example, folk songs can transmit historical events across generations. However, international music offers broader appeal and fosters cross-cultural understanding. Its universal themes allow people from different backgrounds to connect.\n\nBoth forms of music have merits. Traditional music maintains cultural authenticity, while international music promotes global unity. A balance between preserving cultural heritage and embracing global influences would be ideal. Neither should be considered superior, as each contributes uniquely to human experience.",
+        "examiner_notes": "Addresses all parts of the prompt; balanced argument; relevant examples; appropriate vocabulary; well-structured essay with clear introduction, body, and conclusion.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Weather Forecasting",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe diagram below shows how the Australian Bureau of Meteorology collects up-to-the-minute information on the weather in order to produce reliable forecasts.\nWrite a report for a university lecturer describing the information shown below.\nYou should write at least 150 words.",
+    "source": "IELTS 1, Practice Test 2",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "The diagram illustrates the process employed by the Australian Bureau of Meteorology to gather real-time weather data for accurate forecasting.\n\nMeteorological stations are strategically positioned across Australia, continuously measuring various atmospheric conditions. These include temperature, humidity, wind speed and direction, and precipitation levels. Data from each station is transmitted via satellite to a central processing facility.\n\nAt the central facility, computers analyze the incoming information, identifying patterns and potential weather systems. This analysis generates forecasts predicting weather conditions for the immediate future. The system allows for rapid updates as new data becomes available, ensuring forecasts remain as accurate as possible.\n\nIn summary, the process involves data collection from ground stations, transmission to a central hub, computer analysis, and subsequent weather prediction. This sophisticated system enables timely and reliable weather forecasts.",
+        "examiner_notes": "Clear description of the process; appropriate technical vocabulary; accurate sequencing of information; well-structured report with logical flow.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "News Media Influence",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nPresent a written argument or case to an educated reader with no specialist knowledge of the following topic:\nNews editors decide what to broadcast on television and what to print in newspapers. What factors do you think influence these decisions? Do we become used to bad news? Would it be better if more good news was reported?\nYou should write at least 250 words.\nUse your own ideas, knowledge and experience and support your arguments with examples and relevant evidence.",
+    "source": "IELTS 1, Practice Test 2",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "News editors face numerous considerations when selecting content for publication or broadcast. Several key factors influence their decisions, including audience interest, timeliness, relevance, and commercial considerations.\n\nAudience demand plays a significant role, with editors prioritizing stories likely to attract viewers or readers. Current events and local relevance are also crucial, as people seek information about immediate concerns. The need to fill broadcast time or newspaper space often leads to the selection of dramatic or controversial stories.\n\nRegarding desensitization to bad news, constant exposure to negative stories may indeed lead to apathy. People might tune out persistent negativity, reducing the impact of important warnings. However, this also raises concerns about the potential consequences of ignoring critical issues.\n\nIncreasing positive coverage could potentially improve morale and highlight achievements. However, a complete shift to good news might compromise the media's watchdog function. A balanced approach, emphasizing both challenges and successes, would likely be most beneficial for society.",
+        "examiner_notes": "Addresses all parts of the prompt; logical structure; relevant examples; appropriate language; cohesive writing.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 1,
+    "topic": "Fast Food Spending",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nThe chart below shows the amount of money per week spent on fast foods in Britain. The graph shows the trends in consumption of fast foods.\nWrite a report for a university lecturer describing the information shown below.\nYou should write at least 150 words.",
+    "source": "IELTS 1, Practice Test 3",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "The chart presents data on weekly expenditure on fast foods across different income groups in Britain, while the graph illustrates changes in consumption patterns over a 20-year period.\n\nFor expenditure, high-income earners spent significantly more on hamburgers compared to other groups, with average spendings on fish and chips and pizza being considerably lower. Average-income households showed similar preferences but with slightly reduced amounts. Low-income groups spent the least but still favored fish and chips.\n\nRegarding consumption trends, fish and chips was the most popular fast food in 1970, but its popularity declined over the following decades. Hamburgers and pizza saw steady increases, becoming the dominant choices by 1990. Interestingly, fish and chips experienced a slight resurgence after 1985.\n\nOverall, the data indicates that fast food consumption patterns have shifted towards hamburgers and pizza, particularly among higher income groups, while overall spending varies significantly by income level.",
+        "examiner_notes": "Accurate description of data; appropriate report structure; clear comparison between chart and graph; effective use of linking words.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "academic",
+    "task_type": 2,
+    "topic": "Computers Dependency",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nPresent a written argument or case to an educated reader with no specialist knowledge of the following topic:\nNews editors decide what to broadcast on television and what to print in newspapers. What factors do you think influence these decisions? Do we become used to bad news? Would it be better if more good news was reported?\nYou should write at least 250 words.\nUse your own ideas, knowledge and experience and support your arguments with examples and relevant evidence.",
+    "source": "IELTS 1, Practice Test 3",
+    "samples": [
+      {
+        "band": 8.0,
+        "essay_text": "The increasing dependence on computers has transformed modern society, offering unprecedented convenience and efficiency. However, this reliance raises valid concerns about potential negative consequences.\n\nComputers are now integral to various sectors, including business operations, medical diagnostics, transportation systems, and entertainment. In the future, they may control critical infrastructure like power grids and financial systems, further embedding them in daily life.\n\nWhile computers provide numerous benefits, such as enhanced communication and data processing, their pervasive presence could lead to unforeseen problems. Potential risks include job displacement, privacy invasion, security vulnerabilities, and over-reliance on technology. The complexity of modern computer systems may also create situations where errors have catastrophic effects.\n\nTherefore, while embracing technological advancements, we must maintain a degree of skepticism. It is crucial to develop safeguards, promote digital literacy, and ensure that technology serves human needs rather than the other way around. A balanced approach that maximizes benefits while mitigating risks is essential.",
+        "examiner_notes": "Well-developed argument addressing both sides; relevant examples; appropriate vocabulary; cohesive structure with clear introduction, body paragraphs, and conclusion.",
+        "type": "model"
+      }
+    ]
+  },
+  {
+    "test_type": "gt",
+    "task_type": 1,
+    "topic": "Bank Overdraft",
+    "prompt_text": "WRITING TASK 1\nYou should spend about 20 minutes on this task.\nYou have had a bank account for a few years. Recently you received a letter from the bank stating that your account is $240 overdrawn and that you will be charged $70 which will be taken directly from your account. You know that this information is incorrect.\nWrite a letter to the bank. Explain what has happened and say what you would like them to do about it.\nYou should write at least 150 words.\nYou do NOT need to write your own address. Begin your letter as follows:\nDear Sir,",
+    "source": "IELTS 1, GT Test",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "Dear Sir,\n\nI am writing in response to your recent statement regarding my account being overdrawn. I must point out that the information provided is inaccurate.\n\nUpon reviewing my records, I recall that I recently sold a car and instructed you to cease the direct debits for the monthly payments. However, it appears that this instruction was not processed correctly, leading to the overdraft situation.\n\nTo resolve this matter, I would appreciate it if you could investigate the error and contact the relevant parties to rectify the situation. Specifically, I request that you:\n1. Review your records for the past transactions.\n2. Contact the car dealership to confirm the status of the payments.\n3. Refund any unauthorized charges.\n\nI look forward to your prompt response and resolution of this issue.\n\nYours faithfully,\n\n[Name withheld]",
+        "examiner_notes": "Clear explanation of the problem; appropriate format for a formal letter; specific requests; adequate word count.",
+        "type": "sample"
+      }
+    ]
+  },
+  {
+    "test_type": "gt",
+    "task_type": 2,
+    "topic": "Computers Dependency",
+    "prompt_text": "WRITING TASK 2\nYou should spend about 40 minutes on this task.\nAs part of a class assignment you have to write about the following topic:\nWe are becoming increasingly dependent on computers. They are used in business, hospitals, crime detection and even to fly planes. What things will they be used in the future? Is this dependence on computers a good thing or should we be more suspicious of their benefits?\nYou should write at least 250 words.",
+    "source": "IELTS 1, GT Test",
+    "samples": [
+      {
+        "band": 7.0,
+        "essay_text": "Computers have become an indispensable part of modern life, revolutionizing various aspects of society. Their applications range from business operations to medical diagnostics, crime-solving, and aviation.\n\nIn the future, computers will likely control more complex systems, such as autonomous vehicles, advanced healthcare robotics, and sophisticated environmental monitoring networks. They may even play a role in creative industries, generating music, art, and literature.\n\nWhile the benefits of computer technology are undeniable, including increased efficiency, convenience, and access to information, we should remain cautious. Potential drawbacks include job displacement, privacy concerns, security risks, and the possibility of over-reliance on technology. The rapid pace of technological advancement may outstrip our ability to fully understand or control its implications.\n\nTherefore, while embracing the opportunities offered by computers, we must maintain a balanced perspective. It is essential to develop ethical guidelines, ensure robust security measures, and promote digital literacy to maximize the benefits while minimizing the risks.",
+        "examiner_notes": "Addresses all parts of the prompt; logical structure; relevant examples; appropriate vocabulary; cohesive writing.",
+        "type": "sample"
+      }
+    ]
+  },
+  {
+    "task_type": 1,
+    "test_type": "academic",
+    "topic": "Poverty proportions in Australian families 1999",
+    "prompt_text": "You should spend about 20 minutes on this task. The table below shows the proportion of different categories of families living in poverty in Australia in 1999. Summarise the information by selecting and reporting the main features, and make comparisons where relevant. Write at least 150 words.\n\nFamily type\nProportion of people from each household type living in poverty\nsingle aged person\n6% (54,000)\naged couple\n4% (48,000)\nsingle, no children\n19% (359,000)\ncouple, no children\n7% (211,000)\nsole parent\n21% (232,000)\ncouple with children\n12% (933,000)\nall households\n11% (1,837,000)",
+    "source": "Cambridge IELTS 4, Test 1",
+    "samples": []
+  },
+  {
+    "task_type": 2,
+    "test_type": "academic",
+    "topic": "Compare media effectiveness and choose best",
+    "prompt_text": "You should spend about 40 minutes on this task. Write about the following topic: Compare the advantages and disadvantages of three of the following as media for communicating information. State which you consider to be the most effective. • comics • books • radio • television • film • theatre Give reasons for your answer and include any relevant examples from your own knowledge or experience. Write at least 250 words.",
+    "source": "Cambridge IELTS 4, Test 1",
+    "samples": []
+  }
+]
